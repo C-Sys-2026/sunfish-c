@@ -6,6 +6,50 @@
 #include "../src/hash.h"
 #include "../src/board.h"
 
+
+void test_castling_changes_hash(void) {
+    Position a = {0};
+    Position b = {0};
+
+    strcpy(a.board, initial);
+    strcpy(b.board, initial);
+
+    a.wc[0] = 1;
+
+    assert(hash_position(&a) != hash_position(&b));
+
+    printf("PASS: Castling rights affect the hash\n");
+}
+
+void test_en_passant_changes_hash(void) {
+    Position a = {0};
+    Position b = {0};
+
+    strcpy(a.board, initial);
+    strcpy(b.board, initial);
+
+    a.ep = 44;
+
+    assert(hash_position(&a) != hash_position(&b));
+
+    printf("PASS: En passant affects the hash\n");
+}
+
+void test_king_passant_changes_hash(void) {
+    Position a = {0};
+    Position b = {0};
+
+    strcpy(a.board, initial);
+    strcpy(b.board, initial);
+
+    a.kp = 95;
+
+    assert(hash_position(&a) != hash_position(&b));
+
+    printf("PASS: King-passant affects the hash\n");
+}
+
+
 void test_same_position_same_hash(void) {
     Position a = {0};
     Position b = {0};
@@ -47,6 +91,8 @@ int main(void) {
 
     test_same_position_same_hash();
     test_different_positions_different_hashes();
+    test_en_passant_changes_hash();
+    test_king_passant_changes_hash();
 
     printf("All Zobrist hashing tests passed!\n");
 
