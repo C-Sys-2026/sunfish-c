@@ -18,5 +18,13 @@
 
 // Maximum transposition table entries
 #define TABLE_SIZE 1000000
+#include "position.h"
 
+int negamax(Position pos, int depth);
+
+int negamax_ab(Position pos, int depth, int alpha, int beta);
+
+void order_moves(const Position *pos, Move moves[], int count);
+
+int quiescence(Position pos, int alpha, int beta);
 #endif

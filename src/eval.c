@@ -1,4 +1,7 @@
 #include "eval.h"
+#include "position.h"
+#include "board.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -125,4 +128,47 @@ void init_king_tables(void) {
     *
     * Generated using Manhattan distance from the board center.
     */
+}
+
+
+int value(const Position *pos, Move move) {
+    int i = move.i;
+    int j = move.j;
+    char prom = move.prom;
+
+    char p = pos->board[i];
+    char q = pos->board[j];
+
+    // Moving a piece changes its positional value.
+    int score = pst[(int)p][j] - pst[(int)p][i];
+
+    // Capturing an enemy piece gains its material and positional value.
+    if (islower((unsigned char)q)) {
+        score += pst[toupper((unsigned char)q)][119 - j];
+    }
+
+    // Account for a king exposed during castling.
+    if (abs(j - pos->kp) < 2) {
+        score += pst['K'][119 - j];
+    }
+
+    // Castling also changes the rook's position.
+    if (p == 'K' && abs(j - i) == 2) {
+        score += pst['R'][(i + j) / 2];
+        score -= pst['R'][j < i ? A1 : H1];
+    }
+
+    if (p == 'P') {
+        // Promotion replaces the pawn with the promoted piece.
+        if (A8 <= j && j <= H8) {
+            score += pst[(int)prom][j] - pst['P'][j];
+        }
+
+        // En passant captures a pawn on a different square.
+        if (j == pos->ep) {
+            score += pst['P'][119 - (j + S)];
+        }
+    }
+
+    return score;
 }

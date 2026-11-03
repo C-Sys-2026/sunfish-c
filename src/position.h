@@ -21,4 +21,6 @@ typedef struct {
 
 Position rotate(Position pos, int nullmove);
 
+Position make_move(Position pos, Move move);
+
 #endif
