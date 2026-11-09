@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -95,6 +97,7 @@ void test_both_file_and_rank(void) {
     printf("PASS: Both file and rank disambiguation\n");
 }
 
+#if 0
 int main(void) {
     test_no_ambiguity();
     test_file_disambiguation();
@@ -105,3 +108,4 @@ int main(void) {
 
     return 0;
 }
+#endif

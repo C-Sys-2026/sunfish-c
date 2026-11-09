@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -7,7 +9,7 @@
 #include "../src/board.h"
 
 // Test 1: Basic pawn move (e2 -> e4)
-void test_pawn_move(void) {
+void test_san_pawn_move(void) {
     Position pos = {0};
     strcpy(pos.board, initial);
 
@@ -52,7 +54,7 @@ void test_pawn_capture(void) {
 }
 
 // Test 4: Castling notation (e1 -> g1)
-void test_castling(void) {
+void test_san_castling(void) {
     Position pos = {0};
     strcpy(pos.board, initial);
 
@@ -78,14 +80,16 @@ void test_small_buffer(void) {
     printf("PASS: Small buffer rejected\n");
 }
 
+#if 0
 int main(void) {
-    test_pawn_move();
+    test_san_pawn_move();
     test_knight_move();
     test_pawn_capture();
-    test_castling();
+    test_san_castling();
     test_small_buffer();
 
     printf("\nAll 5 basic SAN tests passed!\n");
 
     return 0;
 }
+#endif

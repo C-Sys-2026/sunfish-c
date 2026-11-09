@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -43,6 +45,7 @@ void test_center_knight(void) {
 }
 
 
+#if 0
 int main(void) {
     Position pos = {0};
     strcpy(pos.board, initial);
@@ -67,3 +70,4 @@ int main(void) {
     test_center_knight();
     return 0;
 }
+#endif

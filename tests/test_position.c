@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -25,7 +27,7 @@ void test_promotion(void) {
     printf("PASS: Pawn promotion creates a queen\n");
 }
 
-void test_castling(void) {
+void test_position_castling(void) {
     Position pos = {0};
     strcpy(pos.board, initial);
 
@@ -73,7 +75,7 @@ void test_en_passant(void) {
 }
 
 
-void test_pawn_move(void) {
+void test_position_pawn_move(void) {
     Position pos = {0};
     strcpy(pos.board, initial);
 
@@ -116,16 +118,18 @@ void test_double_pawn_push(void) {
     printf("PASS: Double pawn push sets en passant square\n");
 }
 
+#if 0
 int main(void) {
     pad_tables();
     init_king_tables();
 
-    test_pawn_move();
+    test_position_pawn_move();
     test_move_score();
     test_double_pawn_push();
     test_promotion();
-    test_castling();
+    test_position_castling();
     test_en_passant();
     printf("All position tests passed!\n");
     return 0;
 }
+#endif

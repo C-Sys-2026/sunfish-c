@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -154,6 +156,7 @@ void test_depth_two(void) {
     printf("PASS: Depth two completes successfully\n");
 }
 
+#if 0
 int main(void) {
     pad_tables();
     init_king_tables();
@@ -169,3 +172,4 @@ int main(void) {
     printf("All search tests passed!\n");
     return 0;
 }
+#endif

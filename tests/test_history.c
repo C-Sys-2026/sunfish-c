@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -34,6 +36,7 @@ void test_san_history(void) {
     printf("PASS: SAN move history saved correctly\n");
 }
 
+#if 0
 int main(void) {
     test_san_history();
 
@@ -41,3 +44,4 @@ int main(void) {
 
     return 0;
 }
+#endif

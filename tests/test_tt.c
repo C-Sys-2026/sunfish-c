@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdint.h>
 #include <stdio.h>
 
@@ -104,6 +106,7 @@ void test_tt_bounds(void) {
     printf("PASS: Transposition table respects score bounds\n");
 }
 
+#if 0
 int main(void) {
     test_store_and_probe();
     test_insufficient_depth();
@@ -115,3 +118,4 @@ int main(void) {
 
     return 0;
 }
+#endif

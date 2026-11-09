@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include "../third_party/munit/munit.h"
+#define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
 
@@ -85,6 +87,7 @@ void test_different_positions_different_hashes(void) {
     printf("PASS: Different positions have different hashes\n");
 }
 
+#if 0
 int main(void) {
     // Initialize the Zobrist keys before hashing positions.
     init_zobrist();
@@ -98,3 +101,4 @@ int main(void) {
 
     return 0;
 }
+#endif
