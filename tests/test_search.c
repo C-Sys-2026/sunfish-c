@@ -195,6 +195,36 @@ void test_alpha_beta_stalemate(void){
     printf("PASS: Alpha-beta detects stalemate\n");
 }
 
+void test_quiescence_checkmate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[87] = 'q';
+    pos.board[76] = 'k';
+
+    assert(quiescence(pos, -1000000, 1000000) == -MATE_UPPER);
+    printf("PASS: Quiescence detects checkmate\n");
+}
+void test_quiescence_stalemate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[57] = 'r';
+    pos.board[28] = 'k';
+    pos.board[84] = 'r';
+
+    assert(quiescence(pos, -1000000, 1000000) == 0);
+    printf("PASS: Quiescence detects stalemate\n");
+}
+void test_quiescence_depth_limit(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[57] = 'r';
+    pos.board[28] = 'k';
+    pos.board[84] = 'r';
+
+    assert(quiescence(pos, -1000000, 1000000) == 0);
+    printf("PASS: Quiescence respects depth limit\n");
+}
+
 #if 0
 int main(void) {
     pad_tables();

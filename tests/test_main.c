@@ -52,6 +52,9 @@ void test_negamax_checkmate(void);
 void test_negamax_stalemate(void);
 void test_alpha_beta_checkmate(void);
 void test_alpha_beta_stalemate(void);
+void test_quiescence_checkmate(void);
+void test_quiescence_stalemate(void);
+void test_quiescence_depth_limit(void);
 void test_store_and_probe(void);
 void test_insufficient_depth(void);
 void test_clear(void);
@@ -113,6 +116,9 @@ WRAP(test_negamax_checkmate)
 WRAP(test_negamax_stalemate)
 WRAP(test_alpha_beta_checkmate)
 WRAP(test_alpha_beta_stalemate)
+WRAP(test_quiescence_checkmate)
+WRAP(test_quiescence_stalemate)
+WRAP(test_quiescence_depth_limit)
 WRAP(test_store_and_probe)
 WRAP(test_insufficient_depth)
 WRAP(test_clear)
@@ -172,6 +178,9 @@ static MunitTest tests[] = {
     CASE("/search/negamax_stalemate", test_negamax_stalemate),
     CASE("/search/alpha_beta_checkmate", test_alpha_beta_checkmate),
     CASE("/search/alpha_beta_stalemate", test_alpha_beta_stalemate),
+    CASE("/search/quiescence_checkmate", test_quiescence_checkmate),
+    CASE("/search/quiescence_stalemate", test_quiescence_stalemate),
+    CASE("/search/quiescence_depth_limit", test_quiescence_depth_limit),
     CASE("/tt/store_and_probe", test_store_and_probe),
     CASE("/tt/insufficient_depth", test_insufficient_depth),
     CASE("/tt/clear", test_clear),
