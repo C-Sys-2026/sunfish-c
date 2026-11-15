@@ -7,6 +7,7 @@ static uint64_t zobrist[128][120];
 static uint64_t castling_keys[4];
 static uint64_t ep_keys[120];
 static uint64_t kp_keys[120];
+static int zobrist_initialized;
 
 // Generate deterministic pseudo-random 64-bit numbers.
 static uint64_t next_random(void) {
@@ -34,9 +35,15 @@ void init_zobrist(void) {
         ep_keys[sq] = next_random();
         kp_keys[sq] = next_random();
     }
+
+    zobrist_initialized = 1;
 }
 
 uint64_t hash_position(const Position *pos) {
+    if (!zobrist_initialized) {
+        init_zobrist();
+    }
+
     uint64_t hash = 0;
 
     for (int sq = 0; sq < 120; sq++) {

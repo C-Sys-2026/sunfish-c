@@ -69,6 +69,7 @@ int pst[128][120];
 
 int K_MID[120];
 int K_END[120];
+static int tables_initialized;
 
 
 void pad_tables(void) {
@@ -87,6 +88,8 @@ void pad_tables(void) {
                 original_pst[(int)k][i] + piece[(int)k];
         }
     }
+
+    tables_initialized = 1;
 }
 
 
@@ -132,6 +135,10 @@ void init_king_tables(void) {
 
 
 int value(const Position *pos, Move move) {
+    if (!tables_initialized) {
+        pad_tables();
+    }
+
     int i = move.i;
     int j = move.j;
     char prom = move.prom;

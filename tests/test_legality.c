@@ -23,6 +23,17 @@ static Position empty_position(void) {
     return pos;
 }
 
+
+static int contains_move(Move moves[], int count, int from, int to){
+    for (size_t i = 0; i < count; i++)
+    {
+        if(moves[i].i==from && moves[i].j ==to){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void test_pawn_attack(void) {
     Position pos = empty_position();
 
@@ -166,6 +177,35 @@ void test_board_boundary(void) {
     printf("PASS: Board boundary handled correctly\n");
 }
 
+void test_initial_legal_moves(void){
+    // init a position
+    Position pos = empty_position();
+    strcpy(pos.board, initial);
+    pos.wc[0] = 1;
+    pos.wc[1] = 1;
+    pos.bc[0] = 1;
+    pos.bc[1] = 1;
+    Move moves[256];
+    int count = gen_legal_moves(&pos, moves);
+    assert(count == 20);
+    printf("PASS: Initial position has 20 legal moves\n");
+}
+
+void test_pinned_rook(void){
+    Position pos = empty_position();
+    pos.board[95] = 'K';
+    pos.board[85] = 'R';
+    pos.board[25] = 'r';
+    pos.board[21] = 'k';
+
+    Move moves[256];
+    int count = gen_legal_moves(&pos, moves);
+
+    assert(contains_move(moves, count, 85, 84) == 0);
+    assert(contains_move(moves, count, 85, 75) == 1);
+    printf("PASS: Pinned rook cannot move\n");
+}
+
 #if 0
 int main(void) {
     test_pawn_attack();
@@ -180,7 +220,8 @@ int main(void) {
     test_not_in_check();
     test_missing_king();
     test_board_boundary();
-
+    test_initial_legal_moves();
+    test_pinned_rook();
     printf("All legality tests passed!\n");
 
     return 0;

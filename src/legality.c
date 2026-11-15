@@ -1,6 +1,8 @@
 
 #include "legality.h"
 #include "board.h"
+#include "movegen.h"
+#include <stdlib.h>
 
 int is_square_attacked(const Position *pos, int square) {
 
@@ -112,5 +114,83 @@ int is_in_check(const Position *pos) {
 
     // If no king exists, treat the position
     // as unsafe.
+    return 1;
+}
+
+
+int gen_legal_moves(const Position *pos, Move moves[]) {
+
+    Move candidates[256];
+
+    int count = gen_moves(pos, candidates);
+
+    int legal_count = 0;
+
+    for (int k = 0; k < count; k++) {
+
+        Move current = candidates[k];
+
+        // TODO 1:
+        // If the destination contains the enemy king,
+        // skip this candidate using continue.
+        if (pos->board[current.j] == 'k') {
+            continue;
+        }
+
+        // TODO 2:
+        // Check if the moving piece is a king
+        // AND it is moving two squares.
+        if (pos->board[current.i] == 'K' && abs(current.j - current.i) == 2) {
+
+            // TODO 3:
+            // If it is a castling move, call
+            // is_castling_safe().
+            // Skip the candidate if it is unsafe.
+            if (!is_castling_safe(pos, current)) {
+                continue;
+            }
+
+        }
+        // Existing king-safety filtering.
+
+        Position new_pos = make_move(*pos, current);
+
+        new_pos = rotate(new_pos, 0);
+
+        if (!is_in_check(&new_pos)) {
+            moves[legal_count] = current;
+            legal_count++;
+        }
+    }
+
+    return legal_count;
+}
+
+
+int is_castling_safe(const Position *pos, Move move) {
+
+    if (is_in_check(pos)) {
+        return 0;
+    }
+
+    int direction;
+
+    if (move.j > move.i) {
+        direction = E;
+    } else {
+        direction = W;
+    }
+
+    int middle = move.i + direction;
+
+    Position temp = *pos;
+
+    temp.board[middle] = 'K';
+    temp.board[move.i] = '.';
+
+    if (is_square_attacked(&temp, middle)) {
+        return 0;
+    }
+
     return 1;
 }
