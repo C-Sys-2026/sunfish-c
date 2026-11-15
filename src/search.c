@@ -1,25 +1,35 @@
 
 #include "search.h"
 #include "movegen.h"
+#include "legality.h"
 #include "position.h"
 #include "eval.h"
+#include "board.h"
 #include <ctype.h>
 
 int negamax(Position pos, int depth) {
+    int score;
+    if (is_checkmate(&pos)) {
+        return -MATE_UPPER; // prefer faster checkmates
+    }
+
+    if (is_stalemate(&pos)) {
+        return 0; // stalemate is a draw
+    }
     // Stop searching when we reach the requested depth.
     if (depth <= 0) {
         return pos.score;
     }
 
     Move moves[256];
-    int count = gen_moves(&pos, moves);
+    int count = gen_legal_moves(&pos, moves);
 
     int best = -1000000;
 
     // Explore moves from the opponent's perspective.
     for (int i = 0; i < count; i++) {
         Position next = make_move(pos, moves[i]);
-        int score = -negamax(next, depth - 1);
+        score = -negamax(next, depth - 1);
 
         if (score > best) {
             best = score;
@@ -31,13 +41,21 @@ int negamax(Position pos, int depth) {
 
 
 int negamax_ab(Position pos, int depth, int alpha, int beta) {
+    int score;
+    if (is_checkmate(&pos)) {
+        return -MATE_UPPER; // prefer faster checkmates
+    }
+
+    if (is_stalemate(&pos)) {
+        return 0; // stalemate is a draw
+    }
     // Continue tactical exchanges instead of stopping immediately.
     if (depth <= 0) {
         return quiescence(pos, alpha, beta);
     }
 
     Move moves[256];
-    int count = gen_moves(&pos, moves);
+    int count = gen_legal_moves(&pos, moves);
 
     // Good move ordering helps alpha-beta prune more branches.
     order_moves(&pos, moves, count);
@@ -48,8 +66,8 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
         Position next = make_move(pos, moves[i]);
 
         // Reverse the search bounds for the opponent.
-        int score = -negamax_ab(next, depth - 1, -beta, -alpha);
-
+        score = -negamax_ab(next, depth - 1, -beta, -alpha);
+        
         if (score > best) {
             best = score;
         }
@@ -85,47 +103,82 @@ void order_moves(const Position *pos, Move moves[], int count) {
     }
 }
 
-
 int quiescence(Position pos, int alpha, int beta) {
+    return quiescence_search(pos, alpha, beta, 8);
+}
+
+int quiescence_search(Position pos, int alpha, int beta, int depth){
+    int in_check = 0;
+    int has_king = 0;
+
     // The current evaluation is our starting point.
+
+    if (is_checkmate(&pos)) {
+        return -MATE_UPPER; // prefer faster checkmates
+    }
+
+    if (is_stalemate(&pos)) {
+        return 0; // stalemate is a draw
+    }
+
+    if (depth <= 0) {
+        return pos.score;
+    }
+
+    for (int square = 0; square < BOARD_SIZE; square++) {
+        if (pos.board[square] == 'K') {
+            has_king = 1;
+            in_check = is_in_check(&pos);
+            break;
+        }
+    }
+
     int stand_pat = pos.score;
 
-    if (stand_pat >= beta) {
+    if (stand_pat >= beta && !in_check) {
         return beta;
     }
 
-    if (stand_pat > alpha) {
+    if (stand_pat > alpha && !in_check) {
         alpha = stand_pat;
     }
 
     Move moves[256];
-    int count = gen_moves(&pos, moves);
+    int count = has_king ? gen_legal_moves(&pos, moves) : gen_moves(&pos, moves);
 
     // Searching promising captures first improves pruning.
     order_moves(&pos, moves, count);
 
     for (int i = 0; i < count; i++) {
         Move move = moves[i];
-
-        // Only continue searching captures of enemy pieces.
-        if (!islower((unsigned char)pos.board[move.j])) {
-            continue;
-        }
-
         Position next = make_move(pos, move);
 
-        // The opponent evaluates the position from the opposite perspective.
-        int score = -quiescence(next, -beta, -alpha);
+        // if we are not in check, only consider captures en passat and promotions
+        if (!in_check) {
+            int accept = 0;
+            if (islower((unsigned char)pos.board[move.j])) {
+                accept = 1;
+            } else if (move.prom != '\0') {
+                accept = 1;
+            } else if (move.j == pos.ep && (pos.board[move.i] == 'P')) {
+                accept = 1;
+            }
+            if (!accept) {
+                continue;
+            }
+        }
 
+        // The opponent evaluates the position from the opposite perspective.
+
+        int score = -quiescence_search(next, -beta, -alpha, depth-1);
         if (score >= beta) {
             return beta;
         }
-
         if (score > alpha) {
             alpha = score;
         }
+
     }
 
     return alpha;
 }
-

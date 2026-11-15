@@ -158,7 +158,9 @@ int gen_legal_moves(const Position *pos, Move moves[]) {
         new_pos = rotate(new_pos, 0);
 
         if (!is_in_check(&new_pos)) {
-            moves[legal_count] = current;
+            if (moves != NULL) {
+                moves[legal_count] = current;
+            }
             legal_count++;
         }
     }
@@ -196,14 +198,32 @@ int is_castling_safe(const Position *pos, Move move) {
 }
 
 int is_checkmate(const Position *pos) {
-    if (is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
+    int has_king = 0;
+
+    for (int square = 0; square < BOARD_SIZE; square++) {
+        if (pos->board[square] == 'K') {
+            has_king = 1;
+            break;
+        }
+    }
+
+    if (has_king && is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
         return 1;
     }
     return 0;
 }
 
 int is_stalemate(const Position *pos) {
-    if (!is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
+    int has_king = 0;
+
+    for (int square = 0; square < BOARD_SIZE; square++) {
+        if (pos->board[square] == 'K') {
+            has_king = 1;
+            break;
+        }
+    }
+
+    if (has_king && !is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
         return 1;
     }
     return 0;

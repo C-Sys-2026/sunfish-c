@@ -155,6 +155,46 @@ void test_depth_two(void) {
     printf("PASS: Depth two completes successfully\n");
 }
 
+void test_negamax_checkmate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[87] = 'q';
+    pos.board[76] = 'k';
+
+    assert(negamax(pos, 0) == -MATE_UPPER);
+    printf("PASS: Negamax detects checkmate\n");
+}
+
+void test_negamax_stalemate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[57] = 'r';
+    pos.board[28] = 'k';
+    pos.board[84] = 'r';
+
+    assert(negamax(pos, 0) == 0);
+    printf("PASS: Negamax detects stalemate\n");
+}
+void test_alpha_beta_checkmate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[87] = 'q';
+    pos.board[76] = 'k';
+
+    assert(negamax_ab(pos, 0, -1000000, 1000000) == -MATE_UPPER);
+    printf("PASS: Alpha-beta detects checkmate\n");
+}
+void test_alpha_beta_stalemate(void){
+    Position pos = {0};
+    pos.board[98] = 'K';
+    pos.board[57] = 'r';
+    pos.board[28] = 'k';
+    pos.board[84] = 'r';
+
+    assert(negamax_ab(pos, 0, -1000000, 1000000) == 0);
+    printf("PASS: Alpha-beta detects stalemate\n");
+}
+
 #if 0
 int main(void) {
     pad_tables();
