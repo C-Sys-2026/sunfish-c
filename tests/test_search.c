@@ -1,15 +1,14 @@
 
-#include <assert.h>
-#include "../third_party/munit/munit.h"
-#define assert(expr) munit_assert(expr)
-#include <stdio.h>
-#include <string.h>
 
+#include "../third_party/munit/munit.h"
 #include "../src/movegen.h"
 #include "../src/board.h"
 #include "../src/position.h"
 #include "../src/eval.h"
 #include "../src/search.h"
+#define assert(expr) munit_assert(expr)
+#include <stdio.h>
+#include <string.h>
 
 
 void test_quiescence_integration(void) {

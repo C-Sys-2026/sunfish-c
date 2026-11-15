@@ -1,18 +1,20 @@
+
 CC = gcc
 CPPFLAGS ?= -Iinclude
 CFLAGS ?= -Wall -Wextra -Wpedantic -std=c11
 LDFLAGS ?=
-LDLIBS ?=
+LDLIBS ?= -lwinpthread
 
-TARGET := build/sunfish-c
+TARGET := build/sunfish-c.exe
 SOURCES := src/main.c
 OBJECTS := $(SOURCES:src/%.c=build/%.o)
+
 ENGINE_TEST_SOURCES := $(filter-out src/main.c,$(wildcard src/*.c))
-TEST_SOURCES := $(wildcard tests/*.c) third_party/munit/munit.c
-TEST_OBJECTS := $(ENGINE_TEST_SOURCES:src/%.c=build/test-src-%.o) \\
-                $(filter-out build/test-main.o,$(TEST_SOURCES:tests/%.c=build/test-%.o)) \\
-                build/test-main.o build/test-munit.o
-TEST_TARGET := build/tests
+TEST_SOURCES := $(wildcard tests/*.c)
+
+TEST_OBJECTS := $(ENGINE_TEST_SOURCES:src/%.c=build/test-src-%.o) $(TEST_SOURCES:tests/%.c=build/test-%.o) build/test-munit.o
+
+TEST_TARGET := build/tests.exe
 
 .PHONY: all debug release test clean
 
@@ -26,7 +28,7 @@ release: $(TARGET)
 
 test: CFLAGS += -O0 -g3
 test: $(TEST_TARGET)
-	$(TEST_TARGET)
+	.\build\tests.exe
 
 $(TEST_TARGET): $(TEST_OBJECTS)
 	@cmd /C "if not exist $(@D) mkdir $(@D)"
@@ -53,6 +55,7 @@ build/%.o: src/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 -include $(OBJECTS:.o=.d)
+-include $(TEST_OBJECTS:.o=.d)
 
 clean:
 	cmd /C "if exist build rmdir /s /q build"
