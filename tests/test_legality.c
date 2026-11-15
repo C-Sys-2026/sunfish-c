@@ -226,6 +226,27 @@ void test_castling_through_check(void){
     printf("PASS: Castling through check is illegal\n");
 }
 
+void test_checkmate(void){
+    Position pos = empty_position();
+    pos.board[98] = 'K';
+    pos.board[87] = 'q';
+    pos.board[76] = 'k';
+
+    assert(is_checkmate(&pos) == 1);
+    printf("PASS: Checkmate detected\n");
+}
+
+void test_stalemate(void){
+    Position pos = empty_position();
+    pos.board[98] = 'K';
+    pos.board[57] = 'r';
+    pos.board[28] = 'k';
+    pos.board[84] = 'r';
+
+    assert(is_stalemate(&pos) == 1);
+    printf("PASS: Stalemate detected\n");
+}
+
 #if 0
 int main(void) {
     test_pawn_attack();

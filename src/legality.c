@@ -194,3 +194,17 @@ int is_castling_safe(const Position *pos, Move move) {
 
     return 1;
 }
+
+int is_checkmate(const Position *pos) {
+    if (is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+int is_stalemate(const Position *pos) {
+    if (!is_in_check(pos) && gen_legal_moves(pos, NULL) == 0) {
+        return 1;
+    }
+    return 0;
+}
