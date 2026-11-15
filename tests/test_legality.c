@@ -206,6 +206,26 @@ void test_pinned_rook(void){
     printf("PASS: Pinned rook cannot move\n");
 }
 
+void test_castling_through_check(void){
+    Position pos = empty_position();
+    pos.bc[0] = 1;
+    pos.bc[1] = 1;
+    pos.wc[0] = 1;
+    pos.wc[1] = 1;
+    pos.board[95] = 'K';
+    pos.board[98] = 'R';
+    pos.board[26] = 'r';
+    pos.board[21] = 'k';
+
+    Move moves[256];
+    int count = gen_legal_moves(&pos, moves);
+    assert(contains_move(moves, count, 95, 97) == 0);
+    pos.board[26] = '.';
+    count = gen_legal_moves(&pos, moves);
+    assert(contains_move(moves, count, 95, 97) == 1);
+    printf("PASS: Castling through check is illegal\n");
+}
+
 #if 0
 int main(void) {
     test_pawn_attack();

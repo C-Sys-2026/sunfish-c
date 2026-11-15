@@ -20,6 +20,7 @@ void test_missing_king(void);
 void test_board_boundary(void);
 void test_initial_legal_moves(void);
 void test_pinned_rook(void);
+void test_castling_through_check(void);
 void test_empty_board(void);
 void test_center_knight(void);
 void test_promotion(void);
@@ -74,6 +75,7 @@ WRAP(test_missing_king)
 WRAP(test_board_boundary)
 WRAP(test_initial_legal_moves)
 WRAP(test_pinned_rook)
+WRAP(test_castling_through_check)
 WRAP(test_empty_board)
 WRAP(test_center_knight)
 WRAP(test_promotion)
@@ -126,6 +128,7 @@ static MunitTest tests[] = {
     CASE("/legality/board_boundary", test_board_boundary),
     CASE("/legality/initial_legal_moves", test_initial_legal_moves),
     CASE("/legality/pinned_rook", test_pinned_rook),
+    CASE("/legality/castling_through_check", test_castling_through_check),
     CASE("/movegen/empty_board", test_empty_board),
     CASE("/movegen/center_knight", test_center_knight),
     CASE("/position/promotion", test_promotion),
