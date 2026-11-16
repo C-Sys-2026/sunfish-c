@@ -4,6 +4,8 @@
 #include "legality.h"
 #include "position.h"
 #include "eval.h"
+#include "tt.h"
+#include "hash.h"
 #include "board.h"
 #include <ctype.h>
 
@@ -53,6 +55,14 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     if (depth <= 0) {
         return quiescence(pos, alpha, beta);
     }
+
+    // Check the transposition table for a previously computed score.
+    uint64_t hash = hash_position(&pos);
+    int tt_score = tt_probe(hash, depth, alpha, beta, &score);
+    if (tt_score) {
+        return score;
+    }
+    
 
     Move moves[256];
     int count = gen_legal_moves(&pos, moves);
