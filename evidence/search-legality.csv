@@ -1,0 +1,12 @@
+case,expected,observed,status,raw_evidence
+start-position search,return a legal move,returned move matched generated legal moves,PASS,test-run-stdout.txt
+checkmate,return no move,SearchResult has no best move,PASS,test-run-stdout.txt
+stalemate,return no move,SearchResult has no best move,PASS,test-run-stdout.txt
+promotion,return a legal move,returned promotion matched generated legal moves,PASS,test-run-stdout.txt
+castling,allow legal castle candidate,white castle was present in legal move list,PASS,test-run-stdout.txt
+en-passant,allow legal en-passant candidate,en-passant move was present in legal move list,PASS,test-run-stdout.txt
+black castling,coordinate maps to legal move,black king-side castle was present in legal move list,PASS,test-run-stdout.txt
+stop,return a legal fallback,stopped search retained a generated legal move,PASS,test-run-stdout.txt
+make-and-restore,restore all position fields,position matched its saved snapshot,PASS,test-run-stdout.txt
+short movetime,finish and return bestmove,worker completed and emitted bestmove,PASS,test-run-stdout.txt
+clock controls,accept clocks increments and movestogo,worker completed depth-one search with supplied limits,PASS,test-run-stdout.txt

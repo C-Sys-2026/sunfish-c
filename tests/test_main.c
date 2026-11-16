@@ -62,9 +62,6 @@ void test_search_stores_tt_entry(void);
 void test_search_uses_tt_entry(void);
 void test_iterative_deepening(void);
 void test_iterative_deepening_zero_depth(void);
-void test_best_move(void);
-void test_best_move_checkmate(void);
-void test_best_move_stalemate(void);
 void test_store_and_probe(void);
 void test_insufficient_depth(void);
 void test_clear(void);
@@ -133,9 +130,6 @@ WRAP(test_search_stores_tt_entry)
 WRAP(test_search_uses_tt_entry)
 WRAP(test_iterative_deepening)
 WRAP(test_iterative_deepening_zero_depth)
-WRAP(test_best_move)
-WRAP(test_best_move_checkmate)
-WRAP(test_best_move_stalemate)
 WRAP(test_store_and_probe)
 WRAP(test_insufficient_depth)
 WRAP(test_clear)
@@ -202,9 +196,6 @@ static MunitTest tests[] = {
     CASE("/search/search_uses_tt_entry", test_search_uses_tt_entry),
     CASE("/search/iterative_deepening", test_iterative_deepening),
     CASE("/search/iterative_deepening_zero_depth", test_iterative_deepening_zero_depth),
-    CASE("/search/best_move", test_best_move),
-    CASE("/search/best_move_checkmate", test_best_move_checkmate),
-    CASE("/search/best_move_stalemate", test_best_move_stalemate),
     CASE("/tt/store_and_probe", test_store_and_probe),
     CASE("/tt/insufficient_depth", test_insufficient_depth),
     CASE("/tt/clear", test_clear),

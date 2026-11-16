@@ -1,0 +1,2 @@
+fixture,depth,expected,observed,status,raw_evidence
+NOT_RUN,,,,BLOCKED_KH7_PERFT_HARNESS_NOT_PRESENT,
