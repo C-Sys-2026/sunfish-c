@@ -59,6 +59,7 @@ void test_quiescence_checkmate(void);
 void test_quiescence_stalemate(void);
 void test_quiescence_depth_limit(void);
 void test_search_stores_tt_entry(void);
+void test_search_uses_tt_entry(void);
 void test_store_and_probe(void);
 void test_insufficient_depth(void);
 void test_clear(void);
@@ -124,6 +125,7 @@ WRAP(test_quiescence_checkmate)
 WRAP(test_quiescence_stalemate)
 WRAP(test_quiescence_depth_limit)
 WRAP(test_search_stores_tt_entry)
+WRAP(test_search_uses_tt_entry)
 WRAP(test_store_and_probe)
 WRAP(test_insufficient_depth)
 WRAP(test_clear)
@@ -187,6 +189,7 @@ static MunitTest tests[] = {
     CASE("/search/quiescence_stalemate", test_quiescence_stalemate),
     CASE("/search/quiescence_depth_limit", test_quiescence_depth_limit),
     CASE("/search/search_stores_tt_entry", test_search_stores_tt_entry),
+    CASE("/search/search_uses_tt_entry", test_search_uses_tt_entry),
     CASE("/tt/store_and_probe", test_store_and_probe),
     CASE("/tt/insufficient_depth", test_insufficient_depth),
     CASE("/tt/clear", test_clear),

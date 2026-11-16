@@ -249,6 +249,21 @@ void test_search_stores_tt_entry(void){
     printf("PASS: Search stores entry in transposition table\n");
 }
 
+void test_search_uses_tt_entry(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+    int depth = 2;
+    int alpha = -1000000;
+    int beta = 1000000;
+    tt_clear();
+    uint64_t hash = hash_position(&pos);
+    int score = 12345;
+    tt_store(hash, depth, score, TT_EXACT);
+    int rescore = negamax_ab(pos, depth, alpha, beta);   
+    assert(score == rescore);
+    printf("PASS: Search uses entry from transposition table\n");
+}
+
 #if 0
 int main(void) {
     pad_tables();
