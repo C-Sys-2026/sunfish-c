@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include "search.h"
 #include "movegen.h"
 #include "legality.h"
@@ -101,7 +101,11 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     } else {
         flag = TT_EXACT;
     }
-
+    if (depth == 2) {
+        printf("STORE: hash=%llu depth=%d score=%d flag=%d\n",
+            (unsigned long long)hash, depth, best, flag);
+        fflush(stdout);
+    }
     // 4. STORE: Save the result for this position.
     tt_store(hash, depth, best, flag);
 

@@ -9,6 +9,8 @@
 #define assert(expr) munit_assert(expr)
 #include <stdio.h>
 #include <string.h>
+#include "../src/hash.h"
+#include "../src/tt.h"
 
 
 void test_quiescence_integration(void) {
@@ -223,6 +225,28 @@ void test_quiescence_depth_limit(void){
 
     assert(quiescence(pos, -1000000, 1000000) == 0);
     printf("PASS: Quiescence respects depth limit\n");
+}
+
+void test_search_stores_tt_entry(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+
+    int depth = 2;
+    int alpha = -1000000;
+    int beta = 1000000;
+    tt_clear();
+    // Perform a search to populate the transposition table.
+    int search_score = negamax_ab(pos, depth, alpha, beta);
+    printf("Search score: %d\n", search_score);
+
+    uint64_t hash = hash_position(&pos);
+    int score;
+    int found = tt_probe(hash, depth, alpha, beta, &score);
+    printf("Hash: %llu\n", (unsigned long long)hash);
+    printf("Found: %d\n", found);
+    fflush(stdout);
+    assert(found);
+    printf("PASS: Search stores entry in transposition table\n");
 }
 
 #if 0
