@@ -1,0 +1,155 @@
+.\build\tests.exe
+Running test suite with seed 0x15534978...
+/sunfish-c/hash/castling_changes_hashPASS: Castling rights affect the hash
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/hash/en_passant_changes_hashPASS: En passant affects the hash
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/hash/king_passant_changes_hashPASS: King-passant affects the hash
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/hash/same_position_same_hashPASS: Identical positions have identical hashes
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/hash/different_positions_different_hashesPASS: Different positions have different hashes
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/history/san_history       PASS: SAN move history saved correctly
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/pawn_attack      PASS: Pawn attacks detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/pawn_direction   PASS: Pawn attack direction is correct
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/knight_attack    PASS: Knight attack detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/rook_attack      PASS: Rook attack detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/bishop_attack    PASS: Bishop attack detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/queen_attack     PASS: Queen attacks detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/king_attack      PASS: King attack distance is correct
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/blocked_attack   PASS: Sliding attacks respect blockers
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/in_check         PASS: King in check detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/not_in_check     PASS: Initial position is not in check
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/missing_king     PASS: Missing king treated as unsafe
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/board_boundary   PASS: Board boundary handled correctly
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/initial_legal_movesPASS: Initial position has 20 legal moves
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/pinned_rook      PASS: Pinned rook cannot move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/castling_through_checkPASS: Castling through check is illegal
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/checkmate        PASS: Checkmate detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/legality/stalemate        PASS: Stalemate detected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/movegen/empty_board       PASS: Empty board generates 0 moves
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/movegen/center_knight     PASS: Center knight generates 8 moves
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/promotion        PASS: Pawn promotion creates a queen
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/position_castlingPASS: Castling moves king and rook
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/en_passant       PASS: En passant removes the captured pawn
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/position_pawn_movePASS: Pawn move updates the board
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/move_score       PASS: Pawn move evaluation is correct
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/position/double_pawn_push PASS: Double pawn push sets en passant square
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san/san_pawn_move         PASS: Pawn move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san/knight_move           PASS: Knight move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san/pawn_capture          PASS: Pawn capture
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san/san_castling          PASS: Castling notation
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san/small_buffer          PASS: Small buffer rejected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san_disambiguation/no_ambiguityPASS: No ambiguity
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san_disambiguation/file_disambiguationPASS: File disambiguation
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san_disambiguation/rank_disambiguationPASS: Rank disambiguation
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/san_disambiguation/both_file_and_rankPASS: Both file and rank disambiguation
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_integrationPASS: Alpha-beta calls quiescence at depth zero
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_capture PASS: Quiescence finds a valuable capture
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_quiet_positionPASS: Quiescence returns stand-pat in quiet positions
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/move_ordering      PASS: Moves are ordered by evaluation score
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/alpha_beta         PASS: Alpha-beta search with quiescence
+[ OK    ] [ 0.00000000 / 18446684699.70954895 CPU ]
+/sunfish-c/search/depth_zero         PASS: Depth zero returns current score
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/depth_one          PASS: Depth one selects best immediate score
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/depth_two          PASS: Depth two completes successfully
+[ OK    ] [ 0.00000000 / 9375.00000000 CPU ]
+/sunfish-c/search/negamax_checkmate  PASS: Negamax detects checkmate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/negamax_stalemate  PASS: Negamax detects stalemate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/alpha_beta_checkmatePASS: Alpha-beta detects checkmate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/alpha_beta_stalematePASS: Alpha-beta detects stalemate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_checkmatePASS: Quiescence detects checkmate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_stalematePASS: Quiescence detects stalemate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/quiescence_depth_limitPASS: Quiescence respects depth limit
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/uci_startpos_and_move_sequencePASS: UCI start position and move sequence
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/uci_fen_rejects_bad_position_without_changing_statePASS: Invalid FEN preserves the current position
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/search_returns_a_legal_startpos_movePASS: Search returns a legal start-position move
+[ OK    ] [ 0.00000000 / 3125.00000000 CPU ]
+/sunfish-c/search_checks/search_returns_no_move_for_checkmatePASS: Checkmate returns no best move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/search_returns_no_move_for_stalematePASS: Stalemate returns no best move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/search_returns_legal_promotion_movePASS: Promotion search result is legal
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/castling_and_en_passant_are_legal_search_candidatesPASS: Castling and en-passant candidates are legal
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/black_to_move_castling_coordinates_are_legalPASS: Black castling coordinates map to a legal move
+[ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
+/sunfish-c/search_checks/search_stop_keeps_a_legal_fallback_movePASS: Stop preserves a legal fallback move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/go_handler_stop_joins_searchbestmove a2a3
+PASS: Stop joins the active search
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/go_handler_short_movetime_finishesinfo depth 1 score cp 46 nodes 41 nps 10250 pv d2d4
+info depth 2 score cp 4 nodes 62 nps 7750 pv d2d4
+bestmove d2d4
+PASS: Short movetime search finishes
+[ OK    ] [ 1.00000000 / 6250.00000000 CPU ]
+/sunfish-c/search_checks/go_handler_accepts_clocks_increments_and_movestogoinfo depth 1 score cp 46 nodes 41 nps 8200 pv d2d4
+bestmove d2d4
+PASS: Clock and increment limits are accepted
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/make_move_and_restore_preserve_all_position_fieldsPASS: Applying and restoring a move preserves position state
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/tt/store_and_probe        PASS: Stored entry can be retrieved
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/tt/insufficient_depth     PASS: Insufficient-depth entry is rejected
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/tt/clear                  PASS: Clearing invalidates stored entries
+[ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
+/sunfish-c/tt/index_collision        PASS: Index collisions are handled safely
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/tt/tt_bounds              PASS: Transposition table respects score bounds
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+73 of 73 (100%) tests successful, 0 (0%) test skipped.

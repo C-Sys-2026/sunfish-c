@@ -1,0 +1,3 @@
+uci: unknown command 'unknown-command'
+uci: invalid number for go option 'depth'
+uci: invalid position command; previous position retained

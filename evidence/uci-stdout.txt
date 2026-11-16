@@ -1,0 +1,14 @@
+id name Sunfish-C
+id author Sunfish-C contributors
+uciok
+readyok
+info depth 1 score cp 46 nodes 41 nps 10250 pv d2d4
+info depth 2 score cp 4 nodes 147 nps 7736 pv d2d4 d7d5
+bestmove d2d4
+info depth 1 score cp 46 nodes 41 nps 3416 pv d2d4
+info depth 2 score cp 4 nodes 62 nps 2952 pv d2d4
+bestmove d2d4
+bestmove 0000
+info depth 1 score cp 46 nodes 41 nps 8200 pv d2d4
+info depth 2 score cp 41 nodes 62 nps 6888 pv d2d4
+bestmove d2d4

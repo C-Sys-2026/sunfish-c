@@ -1,0 +1,5 @@
+
+unknown-command
+go depth nope
+position fen 8/8/8/8/8/8/8/8 w - - 0 1
+quit

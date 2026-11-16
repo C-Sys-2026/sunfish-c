@@ -1,8 +1,9 @@
 #include "chess.h"
+#include "uci_api.h"
 
 int chess_run(void)
 {
-    return 0;
+    return uci_main();
 }
 
 int main(void)
