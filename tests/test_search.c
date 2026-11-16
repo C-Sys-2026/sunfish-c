@@ -264,6 +264,25 @@ void test_search_uses_tt_entry(void){
     printf("PASS: Search uses entry from transposition table\n");
 }
 
+void test_iterative_deepening(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+    tt_clear();
+    int max_depth = 3;
+    int score = iterative_deepening(pos, max_depth);
+    int expected = negamax_ab(pos, max_depth, -1000000, 1000000);
+    assert(score == expected);
+}
+
+void test_iterative_deepening_zero_depth(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+    tt_clear();
+    int max_depth = 0;
+    int score = iterative_deepening(pos, max_depth);
+    assert(score == pos.score);
+}
+
 #if 0
 int main(void) {
     pad_tables();

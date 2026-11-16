@@ -210,3 +210,14 @@ int quiescence_search(Position pos, int alpha, int beta, int depth){
 
     return alpha;
 }
+
+int iterative_deepening(Position pos, int max_depth){
+    if (max_depth <= 0) {
+        return pos.score;
+    }
+    int score;
+    for (int depth = 1; depth <= max_depth; depth++) {
+        score = negamax_ab(pos, depth, -1000000, 1000000);
+    }
+    return score;
+}

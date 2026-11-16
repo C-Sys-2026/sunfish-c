@@ -27,4 +27,6 @@ int negamax_ab(Position pos, int depth, int alpha, int beta);
 void order_moves(const Position *pos, Move moves[], int count);
 
 int quiescence(Position pos, int alpha, int beta);
+
+int iterative_deepening(Position pos, int max_depth);
 #endif
