@@ -29,4 +29,6 @@ void order_moves(const Position *pos, Move moves[], int count);
 int quiescence(Position pos, int alpha, int beta);
 
 int iterative_deepening(Position pos, int max_depth);
+
+Move find_best_move(Position pos, int depth);
 #endif

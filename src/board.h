@@ -15,5 +15,7 @@
 #define W -1
 
 extern const char initial[121];
+extern const char empty[121];
+
 
 #endif

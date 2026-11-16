@@ -283,6 +283,74 @@ void test_iterative_deepening_zero_depth(void){
     assert(score == pos.score);
 }
 
+void test_best_move(void){
+    Position pos = {0};
+    strcpy(pos.board, empty);
+    pos.board[28] = 'k';  // h8
+    pos.board[32] = 'R';  // b7
+    pos.board[43] = 'R';  // c6
+    pos.board[91] = 'K';  // a1
+    
+    // best move should find checkmate
+    Move best_move = find_best_move(pos, 1);
+    if (best_move.i == -1 || best_move.j == -1) {
+        printf("No best move found\n");
+        fflush(stdout);
+        assert(0);
+    }
+    printf("Best move: %c%d -> %c%d\n",
+        'a' + (best_move.i % 10) - 1,
+        10 - (best_move.i / 10),
+        'a' + (best_move.j % 10) - 1,
+        10 - (best_move.j / 10));
+    Position next = make_move(pos, best_move);
+    assert(is_checkmate(&next));
+    printf("PASS: find_best_move finds checkmate\n");
+}
+
+void test_best_move_checkmate(void){
+    Position pos = {0};
+    strcpy(pos.board, empty);
+    pos.board[28] = 'k';  // h8
+    pos.board[32] = 'R';  // b7
+    pos.board[43] = 'R';  // c6
+    pos.board[91] = 'K';  // a1
+    
+    // best move should find checkmate
+    Move best_move = find_best_move(pos, 2);
+    if (best_move.i == -1 || best_move.j == -1) {
+        printf("No best move found\n");
+        fflush(stdout);
+        assert(0);
+    }
+    printf("Best move: %c%d -> %c%d\n",
+        'a' + (best_move.i % 10) - 1,
+        10 - (best_move.i / 10),
+        'a' + (best_move.j % 10) - 1,
+        10 - (best_move.j / 10));
+    Position next = make_move(pos, best_move);
+    assert(is_checkmate(&next));
+    printf("PASS: find_best_move finds checkmate\n");    
+}
+
+void test_best_move_stalemate(void){
+    Position pos = {0};
+    strcpy(pos.board, empty);
+    pos.board[28] = 'k';  // h8
+    pos.board[32] = 'R';  // b7
+    pos.board[47] = 'R';  // g6
+    pos.board[91] = 'K';  // a1
+    pos = rotate(pos, 0);
+    
+    Move best_move = find_best_move(pos, 2);
+    if (best_move.i == -1 || best_move.j == -1) {
+        printf("No best move found\n");
+        fflush(stdout);
+        assert(1);
+        printf("PASS: find_best_move finds stalemate\n");
+    }
+}
+
 #if 0
 int main(void) {
     pad_tables();

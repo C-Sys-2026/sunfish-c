@@ -101,11 +101,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     } else {
         flag = TT_EXACT;
     }
-    if (depth == 2) {
-        printf("STORE: hash=%llu depth=%d score=%d flag=%d\n",
-            (unsigned long long)hash, depth, best, flag);
-        fflush(stdout);
-    }
+
     // 4. STORE: Save the result for this position.
     tt_store(hash, depth, best, flag);
 
@@ -220,4 +216,23 @@ int iterative_deepening(Position pos, int max_depth){
         score = negamax_ab(pos, depth, -1000000, 1000000);
     }
     return score;
+}
+
+Move find_best_move(Position pos, int depth){
+    Move moves[256];
+    int count = gen_legal_moves(&pos, moves);
+    int best_score = -1000000;
+    Move best_move = {-1, -1, '\0'};
+    if (depth < 1) {
+        return best_move;
+    }
+    for (int i = 0; i < count; i++) {
+        Position next = make_move(pos, moves[i]);
+        int score = -negamax_ab(next, depth - 1, -1000000, 1000000);
+        if (score > best_score) {
+            best_score = score;
+            best_move = moves[i];
+        }
+    }
+    return best_move;
 }
