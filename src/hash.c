@@ -41,7 +41,7 @@ void init_zobrist(void) {
 
 uint64_t hash_position(const Position *pos) {
     if (!zobrist_initialized) {
-        init_zobrist();
+        return;
     }
 
     uint64_t hash = 0;

@@ -44,6 +44,8 @@ int negamax(Position pos, int depth) {
 
 int negamax_ab(Position pos, int depth, int alpha, int beta) {
     int score;
+    int original_alpha = alpha;
+    
     if (is_checkmate(&pos)) {
         return -MATE_UPPER; // prefer faster checkmates
     }
@@ -58,8 +60,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
 
     // Check the transposition table for a previously computed score.
     uint64_t hash = hash_position(&pos);
-    int tt_score = tt_probe(hash, depth, alpha, beta, &score);
-    if (tt_score) {
+    if (tt_probe(hash, depth, alpha, beta, &score)) {
         return score;
     }
     
@@ -90,6 +91,19 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
             break;
         }
     }
+
+    TTFlag flag;
+
+    if (best <= original_alpha) {
+        flag = TT_UPPER;
+    } else if (best >= beta) {
+        flag = TT_LOWER;
+    } else {
+        flag = TT_EXACT;
+    }
+
+    // 4. STORE: Save the result for this position.
+    tt_store(hash, depth, best, flag);
 
     return best;
 }

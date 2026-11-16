@@ -18,6 +18,17 @@ void test_castling_changes_hash(void) {
 
     a.wc[0] = 1;
 
+    printf("a.wc[0] = %d\n", a.wc[0]);
+    printf("b.wc[0] = %d\n", b.wc[0]);
+
+    printf("Hash A = %llu\n",
+        (unsigned long long)hash_position(&a));
+
+    printf("Hash B = %llu\n",
+        (unsigned long long)hash_position(&b));
+
+    fflush(stdout);
+
     assert(hash_position(&a) != hash_position(&b));
 
     printf("PASS: Castling rights affect the hash\n");

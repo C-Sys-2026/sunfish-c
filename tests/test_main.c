@@ -1,4 +1,7 @@
 #include "../third_party/munit/munit.h"
+#include "../src/eval.h"
+#include "../src/hash.h"
+#include "../src/tt.h"
 
 void test_castling_changes_hash(void);
 void test_en_passant_changes_hash(void);
@@ -61,7 +64,7 @@ void test_clear(void);
 void test_index_collision(void);
 void test_tt_bounds(void);
 
-#define WRAP(fn) static MunitResult wrap_##fn(const MunitParameter* p, void* d) { (void)p; (void)d; fn(); return MUNIT_OK; }
+#define WRAP(fn) static MunitResult wrap_##fn(const MunitParameter* p, void* d) { (void)p; (void)d; tt_clear(); fn(); return MUNIT_OK; }
 #define CASE(name, fn) { name, wrap_##fn, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
 
 WRAP(test_castling_changes_hash)
@@ -194,5 +197,10 @@ static const MunitSuite suite = {
 };
 
 int main(int argc, char* argv[]) {
+    pad_tables();
+    init_king_tables();
+    init_zobrist();
+    tt_clear();
+
     return munit_suite_main(&suite, NULL, argc, argv);
 }

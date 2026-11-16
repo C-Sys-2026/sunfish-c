@@ -1,3 +1,4 @@
+
 from pathlib import Path
 import re
 
@@ -5,7 +6,11 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 TESTS_DIR = ROOT / "tests"
 OUTPUT = TESTS_DIR / "test_main.c"
-TEST_PATTERN = re.compile(r"^\s*void\s+(test_[A-Za-z0-9_]+)\s*\(\s*void\s*\)\s*\{", re.MULTILINE)
+
+TEST_PATTERN = re.compile(
+    r"^\s*void\s+(test_[A-Za-z0-9_]+)\s*\(\s*void\s*\)\s*\{",
+    re.MULTILINE
+)
 
 
 def enabled_source(source: str) -> str:
@@ -14,12 +19,15 @@ def enabled_source(source: str) -> str:
 
     for line in source.splitlines(keepends=True):
         directive = line.strip()
+
         if directive == "#if 0":
             disabled_depth += 1
             continue
+
         if directive == "#endif" and disabled_depth:
             disabled_depth -= 1
             continue
+
         if not disabled_depth:
             lines.append(line)
 
@@ -44,18 +52,27 @@ def discover_tests():
 
 
 def generate_content(tests):
-    declarations = "\n".join(f"void {name}(void);" for _, name in tests)
-    wrappers = "\n".join(f"WRAP({name})" for _, name in tests)
+    declarations = "\n".join(
+        f"void {name}(void);" for _, name in tests
+    )
+
+    wrappers = "\n".join(
+        f"WRAP({name})" for _, name in tests
+    )
+
     cases = "\n".join(
         f'    CASE("/{group}/{name.removeprefix("test_")}", {name}),'
         for group, name in tests
     )
 
     return f'''#include "../third_party/munit/munit.h"
+#include "../src/eval.h"
+#include "../src/hash.h"
+#include "../src/tt.h"
 
 {declarations}
 
-#define WRAP(fn) static MunitResult wrap_##fn(const MunitParameter* p, void* d) {{ (void)p; (void)d; fn(); return MUNIT_OK; }}
+#define WRAP(fn) static MunitResult wrap_##fn(const MunitParameter* p, void* d) {{ (void)p; (void)d; tt_clear(); fn(); return MUNIT_OK; }}
 #define CASE(name, fn) {{ name, wrap_##fn, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }}
 
 {wrappers}
@@ -70,6 +87,11 @@ static const MunitSuite suite = {{
 }};
 
 int main(int argc, char* argv[]) {{
+    pad_tables();
+    init_king_tables();
+    init_zobrist();
+    tt_clear();
+
     return munit_suite_main(&suite, NULL, argc, argv);
 }}
 '''
@@ -77,10 +99,19 @@ int main(int argc, char* argv[]) {{
 
 def main():
     content = generate_content(discover_tests())
-    current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.exists() else None
+
+    current = (
+        OUTPUT.read_text(encoding="utf-8")
+        if OUTPUT.exists()
+        else None
+    )
 
     if current != content:
-        OUTPUT.write_text(content, encoding="utf-8", newline="\n")
+        OUTPUT.write_text(
+            content,
+            encoding="utf-8",
+            newline="\n"
+        )
 
 
 if __name__ == "__main__":
