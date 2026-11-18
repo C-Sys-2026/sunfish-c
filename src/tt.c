@@ -10,6 +10,15 @@ void tt_clear(void) {
     }
 }
 
+int tt_hashfull(void)
+{
+    unsigned long used = 0;
+    for (int i = 0; i < TT_SIZE; i++) {
+        if (table[i].valid) used++;
+    }
+    return (int)((used * 1000) / TT_SIZE);
+}
+
 
 
 int tt_probe(uint64_t key, int depth,

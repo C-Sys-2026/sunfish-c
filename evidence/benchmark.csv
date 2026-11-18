@@ -1,2 +1,13 @@
 suite,configuration,time_ms,nodes,nps,depth,score,pv,status,raw_evidence
-NOT_RUN,,,,,,,,BLOCKED_BENCHMARK_AND_FEATURE_SWITCHES_NOT_PRESENT,
+startpos,TT_off_pruning_off,1053,19990,18965,3,41,d2d4,measured,bench/raw.txt
+startpos,TT_on_pruning_off,5,126,21000,3,46,a2a3,measured,bench/raw.txt
+startpos,TT_off_pruning_on,163,2714,16548,3,41,d2d4,measured,bench/raw.txt
+startpos,TT_on_pruning_on,3,126,31500,3,46,a2a3,measured,bench/raw.txt
+middlegame,TT_off_pruning_off,11579,62510,5398,3,42,b1c3,measured,bench/raw.txt
+middlegame,TT_on_pruning_off,60,198,3245,3,28,b5a6,measured,bench/raw.txt
+middlegame,TT_off_pruning_on,2043,7323,3582,3,42,b1c3,measured,bench/raw.txt
+middlegame,TT_on_pruning_on,60,198,3245,3,28,b5a6,measured,bench/raw.txt
+tactical,TT_off_pruning_off,12399,94699,7637,3,51,b1c3,measured,bench/raw.txt
+tactical,TT_on_pruning_off,15,234,14625,3,60,f4e5,measured,bench/raw.txt
+tactical,TT_off_pruning_on,1772,10695,6032,3,51,b1c3,measured,bench/raw.txt
+tactical,TT_on_pruning_on,16,234,13764,3,60,f4e5,measured,bench/raw.txt

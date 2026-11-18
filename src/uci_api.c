@@ -5,6 +5,7 @@
 #include "legality.h"
 #include "movegen.h"
 #include "search.h"
+#include "tt.h"
 
 #include <ctype.h>
 #include <errno.h>
@@ -248,6 +249,7 @@ SearchResult search_position(const Position *position, const SearchLimits *limit
     if (count == 0) return result;
     result.best_move = moves[0];
     result.has_best_move = 1;
+    search_reset_node_count();
     max_depth = limits->depth > 0 ? limits->depth : 1;
     if (max_depth > 8) max_depth = 8;
     for (int depth = 1; depth <= max_depth && !stop_requested; depth++) {
@@ -255,13 +257,16 @@ SearchResult search_position(const Position *position, const SearchLimits *limit
         if (best.i >= 0) result.best_move = best;
         result.depth = depth;
         result.score = iterative_deepening(*position, depth);
-        result.nodes++;
+        result.nodes = search_get_node_count();
+        result.hashfull = tt_hashfull();
         if (limits->info_callback != NULL) limits->info_callback(&result, limits->info_context);
         if (limits->time_budget_ms >= 0
             && (clock() - started) * 1000 / CLOCKS_PER_SEC >= limits->time_budget_ms) break;
     }
     result.pv[0] = result.best_move;
     result.pv_length = 1;
+    result.nodes = search_get_node_count();
+    result.hashfull = tt_hashfull();
     result.nps = result.nodes * CLOCKS_PER_SEC
         / (unsigned long long)(clock() - started + 1);
     return result;

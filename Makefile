@@ -59,7 +59,7 @@ TEST_TARGET := build/tests$(EXE_EXT)
 # Build targets
 # ==========================================
 
-.PHONY: all debug release test generate-tests clean FORCE
+.PHONY: all debug release test bench generate-tests clean FORCE
 
 all: debug
 
@@ -72,6 +72,9 @@ release: $(TARGET)
 test: CFLAGS += -O0 -g3 -w
 test: $(TEST_TARGET)
 	$(RUN_TESTS)
+
+bench: release
+	@./build/sunfish-c$(EXE_EXT) bench
 
 # ==========================================
 # Automatic test generation

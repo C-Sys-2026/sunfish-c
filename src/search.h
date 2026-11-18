@@ -27,8 +27,12 @@ int negamax_ab(Position pos, int depth, int alpha, int beta);
 void order_moves(const Position *pos, Move moves[], int count);
 
 int quiescence(Position pos, int alpha, int beta);
+int quiescence_search(Position pos, int alpha, int beta, int depth);
 
 int iterative_deepening(Position pos, int max_depth);
 
 Move find_best_move(Position pos, int depth);
+void search_set_features(int tt_enabled, int pruning_enabled);
+void search_reset_node_count(void);
+unsigned long long search_get_node_count(void);
 #endif

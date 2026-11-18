@@ -10,6 +10,19 @@
 #include <ctype.h>
 #include "uci_api.h"
 
+static int tt_enabled = 1;
+static int pruning_enabled = 1;
+static unsigned long long search_nodes;
+
+void search_set_features(int tt, int pruning)
+{
+    tt_enabled = tt;
+    pruning_enabled = pruning;
+}
+
+void search_reset_node_count(void) { search_nodes = 0; }
+unsigned long long search_get_node_count(void) { return search_nodes; }
+
 int negamax(Position pos, int depth) {
     int score;
     if (is_checkmate(&pos)) {
@@ -49,6 +62,7 @@ int negamax(Position pos, int depth) {
 int negamax_ab(Position pos, int depth, int alpha, int beta) {
     int score;
     int original_alpha = alpha;
+    search_nodes++;
     
     if (is_checkmate(&pos)) {
         return -MATE_UPPER; // prefer faster checkmates
@@ -64,8 +78,10 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
 
     // Check the transposition table for a previously computed score.
     uint64_t hash = hash_position(&pos);
-    if (tt_probe(hash, depth, alpha, beta, &score)) {
-        return score;
+    if (tt_enabled) {
+        if (tt_probe(hash, depth, alpha, beta, &score)) {
+            return score;
+        }
     }
     
 
@@ -93,7 +109,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
             alpha = score;
         }
 
-        if (alpha >= beta) {
+        if (pruning_enabled && alpha >= beta) {
             break;
         }
     }
@@ -109,7 +125,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     }
 
     // 4. STORE: Save the result for this position.
-    if (bestidx >= 0) {
+    if (tt_enabled && bestidx >= 0) {
         tt_store(hash, depth, best, flag, moves[bestidx]);
     }
 

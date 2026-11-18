@@ -282,3 +282,20 @@ void test_perft_start_position_fixture(void)
     assert(perft(position.position, 2) == 400);
     printf("PASS: Start-position perft fixtures match\n");
 }
+
+void test_fixed_perft_fixtures(void)
+{
+    char *start_args[] = {"startpos"};
+    char *endgame_args[] = {
+        "fen", "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8",
+        "w", "-", "-", "0", "1"
+    };
+    UciPosition start = parse_position(1, start_args);
+    UciPosition endgame = parse_position(7, endgame_args);
+
+    assert(perft(start.position, 1) == 20);
+    assert(perft(start.position, 2) == 400);
+    assert(perft(endgame.position, 1) == 14);
+    assert(perft(endgame.position, 2) == 191);
+    printf("PASS: Fixed perft fixtures match expected counts\n");
+}

@@ -23,6 +23,7 @@ typedef struct {
 } TTEntry;
 
 void tt_clear(void);
+int tt_hashfull(void);
 
 int tt_probe(uint64_t key, int depth,
              int alpha, int beta, int *score);

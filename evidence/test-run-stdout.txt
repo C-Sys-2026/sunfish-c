@@ -1,6 +1,10 @@
 .\build\tests.exe
 Running test suite with seed 0x15534978...
-/sunfish-c/hash/castling_changes_hashPASS: Castling rights affect the hash
+/sunfish-c/hash/castling_changes_hasha.wc[0] = 1
+b.wc[0] = 0
+Hash A = 4937952739980591533
+Hash B = 1860638976677167467
+PASS: Castling rights affect the hash
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/hash/en_passant_changes_hashPASS: En passant affects the hash
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
@@ -89,13 +93,13 @@ Running test suite with seed 0x15534978...
 /sunfish-c/search/move_ordering      PASS: Moves are ordered by evaluation score
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search/alpha_beta         PASS: Alpha-beta search with quiescence
-[ OK    ] [ 0.00000000 / 18446684699.70954895 CPU ]
+[ OK    ] [ 0.00000000 / 18446647199.70955276 CPU ]
 /sunfish-c/search/depth_zero         PASS: Depth zero returns current score
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search/depth_one          PASS: Depth one selects best immediate score
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search/depth_two          PASS: Depth two completes successfully
-[ OK    ] [ 0.00000000 / 9375.00000000 CPU ]
+[ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
 /sunfish-c/search/negamax_checkmate  PASS: Negamax detects checkmate
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search/negamax_stalemate  PASS: Negamax detects stalemate
@@ -110,6 +114,24 @@ Running test suite with seed 0x15534978...
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search/quiescence_depth_limitPASS: Quiescence respects depth limit
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/search_stores_tt_entrySearch score: 4
+Hash: 1860638976677167467
+Found: 1
+PASS: Search stores entry in transposition table
+[ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
+/sunfish-c/search/search_uses_tt_entryPASS: Search uses entry from transposition table
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/iterative_deepening[ OK    ] [ 0.00000000 / 4687.50000000 CPU ]
+/sunfish-c/search/iterative_deepening_zero_depth[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/best_move          Best move: c6 -> c8
+PASS: find_best_move finds checkmate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/best_move_checkmateBest move: c6 -> c8
+PASS: find_best_move finds checkmate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search/best_move_stalemateNo best move found
+PASS: find_best_move finds stalemate
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/uci_startpos_and_move_sequencePASS: UCI start position and move sequence
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/uci_fen_rejects_bad_position_without_changing_statePASS: Invalid FEN preserves the current position
@@ -123,33 +145,37 @@ Running test suite with seed 0x15534978...
 /sunfish-c/search_checks/search_returns_legal_promotion_movePASS: Promotion search result is legal
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/castling_and_en_passant_are_legal_search_candidatesPASS: Castling and en-passant candidates are legal
-[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
-/sunfish-c/search_checks/black_to_move_castling_coordinates_are_legalPASS: Black castling coordinates map to a legal move
 [ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
+/sunfish-c/search_checks/black_to_move_castling_coordinates_are_legalPASS: Black castling coordinates map to a legal move
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/search_stop_keeps_a_legal_fallback_movePASS: Stop preserves a legal fallback move
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/go_handler_stop_joins_searchbestmove a2a3
 PASS: Stop joins the active search
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
-/sunfish-c/search_checks/go_handler_short_movetime_finishesinfo depth 1 score cp 46 nodes 41 nps 10250 pv d2d4
-info depth 2 score cp 4 nodes 62 nps 7750 pv d2d4
+/sunfish-c/search_checks/go_handler_short_movetime_finishesinfo depth 1 score cp 46 nodes 41 nps 0 hashfull 0
+info depth 2 score cp 4 nodes 483 nps 0 hashfull 0
 bestmove d2d4
 PASS: Short movetime search finishes
-[ OK    ] [ 1.00000000 / 6250.00000000 CPU ]
-/sunfish-c/search_checks/go_handler_accepts_clocks_increments_and_movestogoinfo depth 1 score cp 46 nodes 41 nps 8200 pv d2d4
+[ OK    ] [ 0.00000000 / 14062.50000000 CPU ]
+/sunfish-c/search_checks/go_handler_accepts_clocks_increments_and_movestogoinfo depth 1 score cp 46 nodes 41 nps 0 hashfull 0
 bestmove d2d4
 PASS: Clock and increment limits are accepted
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/search_checks/make_move_and_restore_preserve_all_position_fieldsPASS: Applying and restoring a move preserves position state
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/perft_start_position_fixturePASS: Start-position perft fixtures match
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
+/sunfish-c/search_checks/fixed_perft_fixturesPASS: Fixed perft fixtures match expected counts
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/tt/store_and_probe        PASS: Stored entry can be retrieved
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/tt/insufficient_depth     PASS: Insufficient-depth entry is rejected
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/tt/clear                  PASS: Clearing invalidates stored entries
-[ OK    ] [ 0.00000000 / 1562.50000000 CPU ]
+[ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/tt/index_collision        PASS: Index collisions are handled safely
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
 /sunfish-c/tt/tt_bounds              PASS: Transposition table respects score bounds
 [ OK    ] [ 0.00000000 / 0.00000000 CPU ]
-73 of 73 (100%) tests successful, 0 (0%) test skipped.
+82 of 82 (100%) tests successful, 0 (0%) test skipped.

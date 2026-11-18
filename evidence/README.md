@@ -2,16 +2,16 @@
 
 ## Scope and reproducibility
 
-These logs were captured during the earlier local integration run, before the
-work was restricted to Krishna-owned files. They are historical evidence, not
-validation of the `krishna-uci` branch. That branch intentionally excludes the
-shared UCI API and position/search implementations assigned to other owners.
-Re-run the acceptance sequence after those dependencies are merged.
+`test-run-*`, `uci-*`, `perft.csv`, and `benchmark.csv` are snapshot evidence
+from the submitted implementation. The prior 73-test log is retained as
+historical evidence; the current clean run is 82 of 82 tests passing.
 
 ## Run metadata
 
-- Compiler: `gcc.exe (MinGW.org GCC-6.3.0-1) 6.3.0`
-- Build commands: `mingw32-make release`; also verified directly with
+- Compiler: see `test-run-command.txt`
+- Build commands: `mingw32-make clean && mingw32-make test && mingw32-make release`;
+  benchmark command: `mingw32-make bench`
+- Also verified directly with
   `gcc -std=c11 -Wall -Wextra -Wpedantic -Iinclude -Isrc src/*.c -o <temporary-path>\sunfish-uci.exe`
 - Test command: `mingw32-make test`
 - Machine: Windows 11 Education, version `10.0.26200.0`; computer model not captured.
@@ -28,14 +28,13 @@ Re-run the acceptance sequence after those dependencies are merged.
 - `search-legality.csv` summarizes the search-legality checks and points to the
   raw test log.
 
-## Evidence not available
+## Fresh evidence
 
-- Perft results are not recorded: this repository does not yet contain the
-  fixed-fixture perft harness from KH7. No expected or observed counts are
-  invented; see `perft.csv`.
-- Benchmark comparisons are not recorded: no benchmark command, benchmark
-  suite, or independent TT/pruning feature switches are present. No speedup or
-  Elo claim is made; see `benchmark.csv`.
+- `perft.csv` records fixed start-position and endgame counts verified against
+  the current test suite.
+- `benchmark.csv` and `bench/raw.txt` record the fixed three-position,
+  four-configuration benchmark run. TT and pruning are compared independently;
+  no Elo or unsupported speedup claim is made.
 
 Implemented behavior is described in the source and walkthrough. Measured
 behavior is limited to the captured runs above. Proposed comparisons are not

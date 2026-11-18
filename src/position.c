@@ -1,5 +1,6 @@
 
 #include "position.h"
+#include "eval.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -46,7 +47,6 @@ Position make_move(Position pos, Move move) {
     char prom = move.prom;
 
     char p = pos.board[i];
-    char q = pos.board[j];
 
     Position next = pos;
 

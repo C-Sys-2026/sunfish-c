@@ -320,14 +320,14 @@ void format_search_info(const SearchResult *result, int black_to_move)
     is_mate = result->score >= MATE_LOWER || result->score <= -MATE_LOWER;
     if (is_mate) {
         written = snprintf(line, sizeof(line),
-                           "info depth %d score mate %d nodes %s nps %s",
+                           "info depth %d score mate %d nodes %s nps %s hashfull %d",
                            result->depth, mate_in_moves(result->score),
-                           nodes, nps);
+                           nodes, nps, result->hashfull);
     } else {
         written = snprintf(line, sizeof(line),
-                           "info depth %d score cp %d nodes %s nps %s",
+                           "info depth %d score cp %d nodes %s nps %s hashfull %d",
                            result->depth, result->score,
-                           nodes, nps);
+                           nodes, nps, result->hashfull);
     }
     if (written < 0 || (size_t)written >= sizeof(line)) {
         return;
@@ -342,7 +342,7 @@ void format_search_info(const SearchResult *result, int black_to_move)
         used += (size_t)written;
     }
 
-    for (size_t index = 0; index < result->pv_length; index++) {
+    for (int index = 0; index < result->pv_length; index++) {
         char move_text[6];
         if (!uci_move_to_uci(result->pv[index],
                              black_to_move ^ (int)(index & 1), move_text)) {

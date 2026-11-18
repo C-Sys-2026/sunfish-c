@@ -2,6 +2,7 @@
 #include "position.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 const int directions[128][8] = {
     ['P'] = {N, N+N, N+W, N+E},

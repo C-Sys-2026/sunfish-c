@@ -1,2 +1,1 @@
-mingw32-make release
-mingw32-make test
+git=4cf9ca02813cf8965554164e6e7914a55c126746compiler=gcc.exe (tdm64-1) 10.3.0target=mingw32-make clean && mingw32-make test && mingw32-make release

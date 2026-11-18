@@ -32,6 +32,12 @@ make release
 ```
 
 Both configurations compile with `-Wall -Wextra -Wpedantic -std=c11`.
+
+Run the fixed benchmark suite and regenerate `evidence/benchmark.csv`:
+
+```sh
+make bench
+```
 The executable is written to `build/sunfish-c`.
 
 Remove generated output with:

@@ -34,6 +34,7 @@ struct SearchResult {
     Move pv[UCI_MAX_PV];
     unsigned long long nodes;
     unsigned long long nps;
+    int hashfull;
 };
 
 /* Runs the UCI input loop until EOF or quit; owns command-line state. */

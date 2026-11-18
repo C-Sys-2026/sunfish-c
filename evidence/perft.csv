@@ -1,2 +1,5 @@
 fixture,depth,expected,observed,status,raw_evidence
-NOT_RUN,,,,BLOCKED_KH7_PERFT_HARNESS_NOT_PRESENT,
+startpos,1,20,20,PASS,test-run-stdout.txt
+startpos,2,400,400,PASS,test-run-stdout.txt
+endgame,1,14,14,PASS,test-run-stdout.txt
+endgame,2,191,191,PASS,test-run-stdout.txt
