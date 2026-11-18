@@ -8,6 +8,7 @@
 #include "hash.h"
 #include "board.h"
 #include <ctype.h>
+#include "uci_api.h"
 
 int negamax(Position pos, int depth) {
     int score;
@@ -30,6 +31,9 @@ int negamax(Position pos, int depth) {
 
     // Explore moves from the opponent's perspective.
     for (int i = 0; i < count; i++) {
+        if (search_stop_requested()) {
+            break;
+        }
         Position next = make_move(pos, moves[i]);
         score = -negamax(next, depth - 1);
 
@@ -105,7 +109,9 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     }
 
     // 4. STORE: Save the result for this position.
-    tt_store(hash, depth, best, flag,moves[bestidx]);
+    if (bestidx >= 0) {
+        tt_store(hash, depth, best, flag, moves[bestidx]);
+    }
 
     return best;
 }
@@ -213,8 +219,11 @@ int iterative_deepening(Position pos, int max_depth){
     if (max_depth <= 0) {
         return pos.score;
     }
-    int score;
+    int score = pos.score;
     for (int depth = 1; depth <= max_depth; depth++) {
+        if (search_stop_requested()) {
+            break;
+        }
         score = negamax_ab(pos, depth, -1000000, 1000000);
     }
     return score;

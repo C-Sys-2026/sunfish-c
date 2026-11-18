@@ -1,6 +1,7 @@
 #include "../third_party/munit/munit.h"
 
 #include "../src/legality.h"
+#include "../src/perft.h"
 #include "../include/uci_api.h"
 
 #include <stdio.h>
@@ -270,4 +271,14 @@ void test_make_move_and_restore_preserve_all_position_fields(void)
     position = before;
     assert(memcmp(&position, &before, sizeof(position)) == 0);
     printf("PASS: Applying and restoring a move preserves position state\n");
+}
+
+void test_perft_start_position_fixture(void)
+{
+    char *args[] = {"startpos"};
+    UciPosition position = parse_position(1, args);
+
+    assert(perft(position.position, 1) == 20);
+    assert(perft(position.position, 2) == 400);
+    printf("PASS: Start-position perft fixtures match\n");
 }

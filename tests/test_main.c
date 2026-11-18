@@ -78,6 +78,7 @@ void test_go_handler_stop_joins_search(void);
 void test_go_handler_short_movetime_finishes(void);
 void test_go_handler_accepts_clocks_increments_and_movestogo(void);
 void test_make_move_and_restore_preserve_all_position_fields(void);
+void test_perft_start_position_fixture(void);
 void test_store_and_probe(void);
 void test_insufficient_depth(void);
 void test_clear(void);
@@ -162,6 +163,7 @@ WRAP(test_go_handler_stop_joins_search)
 WRAP(test_go_handler_short_movetime_finishes)
 WRAP(test_go_handler_accepts_clocks_increments_and_movestogo)
 WRAP(test_make_move_and_restore_preserve_all_position_fields)
+WRAP(test_perft_start_position_fixture)
 WRAP(test_store_and_probe)
 WRAP(test_insufficient_depth)
 WRAP(test_clear)
@@ -244,6 +246,7 @@ static MunitTest tests[] = {
     CASE("/search_checks/go_handler_short_movetime_finishes", test_go_handler_short_movetime_finishes),
     CASE("/search_checks/go_handler_accepts_clocks_increments_and_movestogo", test_go_handler_accepts_clocks_increments_and_movestogo),
     CASE("/search_checks/make_move_and_restore_preserve_all_position_fields", test_make_move_and_restore_preserve_all_position_fields),
+    CASE("/search_checks/perft_start_position_fixture", test_perft_start_position_fixture),
     CASE("/tt/store_and_probe", test_store_and_probe),
     CASE("/tt/insufficient_depth", test_insufficient_depth),
     CASE("/tt/clear", test_clear),

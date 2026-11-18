@@ -8,7 +8,7 @@ GUI or user
   -> tokenize() separates the words
   -> dispatch_command() selects a command handler
      -> handle_position() calls uci_position_parse()
-        -> src/position_handler.c validates FEN and legal coordinate moves
+        -> uci_position_parse() validates FEN and legal coordinate moves
      -> handle_go() calls go_handler_start()
         -> src/go_handler.c parses SearchLimits and starts the worker
         -> search_position(Position *, SearchLimits *) searches iteratively
@@ -60,10 +60,11 @@ invalid FEN or moves leave the last valid position unchanged.
 | Module | Responsibility |
 |---|---|
 | `src/uci.c` | Input loop, tokenizer, command dispatch, handshake, and position ownership |
-| `src/position_handler.c` | Start position, FEN, and legal coordinate-move parsing |
+| `src/uci_api.c` | Start position, FEN, and legal coordinate-move parsing |
 | `src/go_handler.c` | Go limits, worker lifecycle, info output, and bestmove output |
 | `src/search.c` | Iterative deepening, alpha-beta search, node counting, and stop checks |
-| `include/uci_api.h` | Shared position, limits, and result types |
+| `include/uci_api.h` | Public include wrapper for shared position, limits, and result types |
+| `src/perft.c` | Recursive legal-move perft counter for fixed rule fixtures |
 | `tests/test_search_checks.c` | Position parsing, legality, special-move, and stop checks |
 
 Build on Windows with a C11 MinGW compiler:

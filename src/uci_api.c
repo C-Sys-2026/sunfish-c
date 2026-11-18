@@ -7,6 +7,8 @@
 #include "search.h"
 
 #include <ctype.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +17,8 @@
 static volatile int stop_requested;
 
 static int square_from_coordinate(const char *text)
+
+
 {
     if (text == NULL || text[0] < 'a' || text[0] > 'h'
         || text[1] < '1' || text[1] > '8') {
@@ -86,12 +90,33 @@ void uci_position_start(UciPosition *position)
     position->fullmove_number = 1;
 }
 
+static int parse_nonnegative_field(const char *text, int minimum, int *value)
+{
+    char *end = NULL;
+    long parsed;
+
+    if (text == NULL || *text == '\0') return 0;
+    for (const char *cursor = text; *cursor != '\0'; cursor++) {
+        if (!isdigit((unsigned char)*cursor)) return 0;
+    }
+    errno = 0;
+    parsed = strtol(text, &end, 10);
+    if (errno != 0 || end == text || *end != '\0'
+        || parsed < minimum || parsed > INT_MAX) {
+        return 0;
+    }
+    *value = (int)parsed;
+    return 1;
+}
+
 static int parse_fen(UciPosition *result, int argc, char *const argv[])
 {
     Position parsed = {0};
     int rank = 0;
     int file = 0;
     const char *board_text = argv[1];
+    int halfmove;
+    int fullmove;
 
     memcpy(parsed.board, empty, sizeof(empty));
     for (const char *cursor = board_text; *cursor != '\0'; cursor++) {
@@ -99,7 +124,7 @@ static int parse_fen(UciPosition *result, int argc, char *const argv[])
             if (file != 8) return 0;
             rank++;
             file = 0;
-        } else if (isdigit((unsigned char)*cursor)) {
+        } else if (*cursor >= '1' && *cursor <= '8') {
             file += *cursor - '0';
         } else if (strchr("PNBRQKpnbrqk", *cursor) != NULL) {
             if (rank > 7 || file > 7) return 0;
@@ -112,10 +137,24 @@ static int parse_fen(UciPosition *result, int argc, char *const argv[])
     }
     if (rank != 7 || file != 8 || argc != 7
         || (strcmp(argv[2], "w") != 0 && strcmp(argv[2], "b") != 0)
-        || strlen(argv[3]) > 4) {
+        || (strcmp(argv[3], "-") != 0 && strlen(argv[3]) > 4)) {
         return 0;
     }
     if (strchr(parsed.board, 'K') == NULL || strchr(parsed.board, 'k') == NULL) {
+        return 0;
+    }
+    for (const char *cursor = argv[3]; *cursor != '\0' && *cursor != '-';
+         cursor++) {
+        if (*cursor != 'K' && *cursor != 'Q'
+            && *cursor != 'k' && *cursor != 'q') {
+            return 0;
+        }
+        if ((cursor != argv[3] && strchr(argv[3], *cursor) != cursor)
+            || (cursor == argv[3] && strchr(cursor + 1, *cursor) != NULL)) {
+            return 0;
+        }
+    }
+    if (strchr(argv[3], '-') != NULL && strcmp(argv[3], "-") != 0) {
         return 0;
     }
     parsed.wc[1] = strchr(argv[3], 'K') != NULL;
@@ -124,14 +163,16 @@ static int parse_fen(UciPosition *result, int argc, char *const argv[])
     parsed.bc[0] = strchr(argv[3], 'q') != NULL;
     if (strcmp(argv[4], "-") != 0) {
         int ep = square_from_coordinate(argv[4]);
-        if (ep < 0) return 0;
+        if (ep < 0 || (argv[4][1] != '3' && argv[4][1] != '6')) return 0;
         parsed.ep = ep;
     }
     parsed.score = 0;
-    if (strcmp(argv[5], "0") != 0 && strtol(argv[5], NULL, 10) < 0) return 0;
-    if (strtol(argv[6], NULL, 10) < 1) return 0;
-    result->halfmove_clock = atoi(argv[5]);
-    result->fullmove_number = atoi(argv[6]);
+    if (!parse_nonnegative_field(argv[5], 0, &halfmove)
+        || !parse_nonnegative_field(argv[6], 1, &fullmove)) {
+        return 0;
+    }
+    result->halfmove_clock = halfmove;
+    result->fullmove_number = fullmove;
     if (strcmp(argv[2], "b") == 0) {
         parsed = rotate(parsed, 0);
     }
@@ -151,8 +192,12 @@ int uci_position_parse(UciPosition *position, int argc, char *const argv[])
         uci_position_start(&parsed);
         index = argc == 1 ? 1 : 2;
     } else if (strcmp(argv[0], "fen") == 0) {
-        if (!parse_fen(&parsed, argc, argv)) return 0;
-        index = argc;
+        if (argc < 7 || !parse_fen(&parsed, 7, argv)) return 0;
+        index = 7;
+        if (argc > index) {
+            if (strcmp(argv[index], "moves") != 0) return 0;
+            index++;
+        }
     } else {
         return 0;
     }
@@ -188,6 +233,7 @@ int uci_position_parse(UciPosition *position, int argc, char *const argv[])
 
 void search_reset_stop(void) { stop_requested = 0; }
 void search_request_stop(void) { stop_requested = 1; }
+int search_stop_requested(void) { return stop_requested != 0; }
 
 SearchResult search_position(const Position *position, const SearchLimits *limits)
 {
