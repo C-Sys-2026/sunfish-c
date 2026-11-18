@@ -13,7 +13,7 @@ void test_store_and_probe(void) {
     uint64_t key = UINT64_C(123456789);
     int score = 0;
 
-    tt_store(key, 4, 250, TT_EXACT);
+    tt_store(key, 4, 250, TT_EXACT, (Move){-1, -1, '\0'});
 
     assert(tt_probe(key, 4, -1000, 1000, &score) == 1);
     assert(score == 250);
@@ -27,7 +27,7 @@ void test_insufficient_depth(void) {
     uint64_t key = UINT64_C(987654321);
     int score = 0;
 
-    tt_store(key, 2, 100, TT_EXACT);
+    tt_store(key, 2, 100, TT_EXACT, (Move){-1, -1, '\0'});
 
     assert(tt_probe(key, 5, -1000, 1000, &score) == 0);
 
@@ -40,7 +40,7 @@ void test_clear(void) {
     uint64_t key = UINT64_C(55555);
     int score = 0;
 
-    tt_store(key, 3, 75, TT_EXACT);
+    tt_store(key, 3, 75, TT_EXACT, (Move){-1, -1, '\0'});
     tt_clear();
 
     assert(tt_probe(key, 3, -1000, 1000, &score) == 0);
@@ -56,8 +56,8 @@ void test_index_collision(void) {
     int score = 0;
 
     // Both keys map to the same table index.
-    tt_store(first, 3, 100, TT_EXACT);
-    tt_store(second, 3, 200, TT_EXACT);
+    tt_store(first, 3, 100, TT_EXACT, (Move){-1, -1, '\0'});
+    tt_store(second, 3, 200, TT_EXACT, (Move){-1, -1, '\0'});
 
     assert(tt_probe(first, 3, -1000, 1000, &score) == 0);
     assert(tt_probe(second, 3, -1000, 1000, &score) == 1);
@@ -73,7 +73,7 @@ void test_tt_bounds(void) {
     tt_clear();
 
     // Exact scores can be reused at sufficient depth.
-    tt_store(key, 4, 150, TT_EXACT);
+    tt_store(key, 4, 150, TT_EXACT, (Move){-1, -1, '\0'});
 
     assert(tt_probe(key, 4, 0, 200, &score) == 1);
     assert(score == 150);
@@ -81,7 +81,7 @@ void test_tt_bounds(void) {
     tt_clear();
 
     // A lower bound can establish a beta cutoff.
-    tt_store(key, 4, 150, TT_LOWER);
+    tt_store(key, 4, 150, TT_LOWER, (Move){-1, -1, '\0'});
 
     // TODO 1: Probe with alpha = 0, beta = 100.
     // Assert that it succeeds.
@@ -94,7 +94,7 @@ void test_tt_bounds(void) {
     tt_clear();
 
     // An upper bound can establish an alpha cutoff.
-    tt_store(key, 4, -50, TT_UPPER);
+    tt_store(key, 4, -50, TT_UPPER, (Move){-1, -1, '\0'});
 
     // TODO 3: Probe with alpha = 0, beta = 200.
     // Assert that it succeeds.

@@ -1,6 +1,6 @@
 
 CC = gcc
-CPPFLAGS ?= -Iinclude
+CPPFLAGS ?= -Iinclude -Isrc
 CFLAGS ?= -Wall -Wextra -Wpedantic -std=c11
 LDFLAGS ?=
 

@@ -62,6 +62,22 @@ void test_search_stores_tt_entry(void);
 void test_search_uses_tt_entry(void);
 void test_iterative_deepening(void);
 void test_iterative_deepening_zero_depth(void);
+void test_best_move(void);
+void test_best_move_checkmate(void);
+void test_best_move_stalemate(void);
+void test_uci_startpos_and_move_sequence(void);
+void test_uci_fen_rejects_bad_position_without_changing_state(void);
+void test_search_returns_a_legal_startpos_move(void);
+void test_search_returns_no_move_for_checkmate(void);
+void test_search_returns_no_move_for_stalemate(void);
+void test_search_returns_legal_promotion_move(void);
+void test_castling_and_en_passant_are_legal_search_candidates(void);
+void test_black_to_move_castling_coordinates_are_legal(void);
+void test_search_stop_keeps_a_legal_fallback_move(void);
+void test_go_handler_stop_joins_search(void);
+void test_go_handler_short_movetime_finishes(void);
+void test_go_handler_accepts_clocks_increments_and_movestogo(void);
+void test_make_move_and_restore_preserve_all_position_fields(void);
 void test_store_and_probe(void);
 void test_insufficient_depth(void);
 void test_clear(void);
@@ -130,6 +146,22 @@ WRAP(test_search_stores_tt_entry)
 WRAP(test_search_uses_tt_entry)
 WRAP(test_iterative_deepening)
 WRAP(test_iterative_deepening_zero_depth)
+WRAP(test_best_move)
+WRAP(test_best_move_checkmate)
+WRAP(test_best_move_stalemate)
+WRAP(test_uci_startpos_and_move_sequence)
+WRAP(test_uci_fen_rejects_bad_position_without_changing_state)
+WRAP(test_search_returns_a_legal_startpos_move)
+WRAP(test_search_returns_no_move_for_checkmate)
+WRAP(test_search_returns_no_move_for_stalemate)
+WRAP(test_search_returns_legal_promotion_move)
+WRAP(test_castling_and_en_passant_are_legal_search_candidates)
+WRAP(test_black_to_move_castling_coordinates_are_legal)
+WRAP(test_search_stop_keeps_a_legal_fallback_move)
+WRAP(test_go_handler_stop_joins_search)
+WRAP(test_go_handler_short_movetime_finishes)
+WRAP(test_go_handler_accepts_clocks_increments_and_movestogo)
+WRAP(test_make_move_and_restore_preserve_all_position_fields)
 WRAP(test_store_and_probe)
 WRAP(test_insufficient_depth)
 WRAP(test_clear)
@@ -196,6 +228,22 @@ static MunitTest tests[] = {
     CASE("/search/search_uses_tt_entry", test_search_uses_tt_entry),
     CASE("/search/iterative_deepening", test_iterative_deepening),
     CASE("/search/iterative_deepening_zero_depth", test_iterative_deepening_zero_depth),
+    CASE("/search/best_move", test_best_move),
+    CASE("/search/best_move_checkmate", test_best_move_checkmate),
+    CASE("/search/best_move_stalemate", test_best_move_stalemate),
+    CASE("/search_checks/uci_startpos_and_move_sequence", test_uci_startpos_and_move_sequence),
+    CASE("/search_checks/uci_fen_rejects_bad_position_without_changing_state", test_uci_fen_rejects_bad_position_without_changing_state),
+    CASE("/search_checks/search_returns_a_legal_startpos_move", test_search_returns_a_legal_startpos_move),
+    CASE("/search_checks/search_returns_no_move_for_checkmate", test_search_returns_no_move_for_checkmate),
+    CASE("/search_checks/search_returns_no_move_for_stalemate", test_search_returns_no_move_for_stalemate),
+    CASE("/search_checks/search_returns_legal_promotion_move", test_search_returns_legal_promotion_move),
+    CASE("/search_checks/castling_and_en_passant_are_legal_search_candidates", test_castling_and_en_passant_are_legal_search_candidates),
+    CASE("/search_checks/black_to_move_castling_coordinates_are_legal", test_black_to_move_castling_coordinates_are_legal),
+    CASE("/search_checks/search_stop_keeps_a_legal_fallback_move", test_search_stop_keeps_a_legal_fallback_move),
+    CASE("/search_checks/go_handler_stop_joins_search", test_go_handler_stop_joins_search),
+    CASE("/search_checks/go_handler_short_movetime_finishes", test_go_handler_short_movetime_finishes),
+    CASE("/search_checks/go_handler_accepts_clocks_increments_and_movestogo", test_go_handler_accepts_clocks_increments_and_movestogo),
+    CASE("/search_checks/make_move_and_restore_preserve_all_position_fields", test_make_move_and_restore_preserve_all_position_fields),
     CASE("/tt/store_and_probe", test_store_and_probe),
     CASE("/tt/insufficient_depth", test_insufficient_depth),
     CASE("/tt/clear", test_clear),

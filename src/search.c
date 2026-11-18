@@ -72,6 +72,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     order_moves(&pos, moves, count);
 
     int best = -1000000;
+    int bestidx = -1;
 
     for (int i = 0; i < count; i++) {
         Position next = make_move(pos, moves[i]);
@@ -81,6 +82,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
         
         if (score > best) {
             best = score;
+            bestidx = i;
         }
 
         if (score > alpha) {
@@ -103,7 +105,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     }
 
     // 4. STORE: Save the result for this position.
-    tt_store(hash, depth, best, flag);
+    tt_store(hash, depth, best, flag,moves[bestidx]);
 
     return best;
 }

@@ -258,7 +258,7 @@ void test_search_uses_tt_entry(void){
     tt_clear();
     uint64_t hash = hash_position(&pos);
     int score = 12345;
-    tt_store(hash, depth, score, TT_EXACT);
+    tt_store(hash, depth, score, TT_EXACT, (Move){-1, -1, '\0'});
     int rescore = negamax_ab(pos, depth, alpha, beta);   
     assert(score == rescore);
     printf("PASS: Search uses entry from transposition table\n");
