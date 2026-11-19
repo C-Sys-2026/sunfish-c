@@ -118,6 +118,34 @@ void test_double_pawn_push(void) {
     printf("PASS: Double pawn push sets en passant square\n");
 }
 
+void test_null_move(void) {
+    Position pos = {0};
+    strcpy(pos.board, initial);
+
+    Move move = {85, 65, '\0'};
+    Position next = make_move(pos, move);
+
+    Position null_move = make_null_move (next);
+
+    // The null move would rotate the board
+    assert(memcmp(null_move.board, rotate(next,0).board, sizeof(next.board)) == 0);
+
+    // The en passant and king promotion squares should be reset.
+    assert(null_move.ep == 0);
+    assert(null_move.kp == 0);
+
+    // The rook and king castling rights should remain unchanged.
+    assert(null_move.wc[0] == next.bc[0]); //becuase of rotation, white castling rights become black castling rights
+    assert(null_move.wc[1] == next.bc[1]);
+    assert(null_move.bc[0] == next.wc[0]);
+    assert(null_move.bc[1] == next.wc[1]);
+
+    //evaluation score changes perspectively correctly
+    assert(null_move.score == -next.score);
+
+    printf("PASS: Null move resets special squares\n");
+}
+
 #if 0
 int main(void) {
     pad_tables();

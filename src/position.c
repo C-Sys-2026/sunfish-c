@@ -95,3 +95,9 @@ Position make_move(Position pos, Move move) {
     return rotate(next, 0); // because we use capital letters for white and lowercase for black, we need to rotate the position after making a move to maintain the correct perspective.
 }
 
+Position make_null_move(Position pos){
+    Position next = pos;
+    next.ep = 0;
+    next.kp = 0;
+    return rotate(next, 1);
+}

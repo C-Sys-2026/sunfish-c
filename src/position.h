@@ -23,4 +23,6 @@ Position rotate(Position pos, int nullmove);
 
 Position make_move(Position pos, Move move);
 
+Position make_null_move(Position pos);
+
 #endif

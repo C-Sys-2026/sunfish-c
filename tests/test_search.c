@@ -386,20 +386,31 @@ void test_search_set_get_options(void){
     assert(retrieved.enable_futility == 1);
     printf("PASS: search_set_options and search_get_options work correctly\n");
 }
-#if 0
-int main(void) {
-    pad_tables();
-    init_king_tables();
 
-    test_depth_zero();
-    test_depth_one();
-    test_depth_two();
-    test_alpha_beta();
-    test_move_ordering();
-    test_quiescence_quiet_position();
-    test_quiescence_integration();
-    test_quiescence_capture();
-    printf("All search tests passed!\n");
-    return 0;
+void test_null_switch(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+    search_set_features(0, 1);
+    SearchOptions options = {1,0,0};
+    search_set_options(options);
+    int score_with_null = negamax_ab(pos, 2, -1000000, 1000000);
+    options.enable_null_move = 0;
+    search_set_options(options);
+    int score_without_null = negamax_ab(pos, 2, -1000000, 1000000);
+    assert(score_with_null == score_without_null);
+    printf("PASS: Null move pruning does not change the score\n");
 }
-#endif
+
+void test_lmr_switch(void){
+    Position pos = {0};
+    strcpy(pos.board, initial);
+    search_set_features(0, 1);
+    SearchOptions options = {0,1,0};
+    search_set_options(options);
+    int score_with_lmr = negamax_ab(pos, 4, -1000000, 1000000);
+    options.enable_lmr = 0;
+    search_set_options(options);
+    int score_without_lmr = negamax_ab(pos, 4, -1000000, 1000000);
+    assert(score_with_lmr == score_without_lmr);
+    printf("PASS: Late move reduction does not change the score\n");
+}

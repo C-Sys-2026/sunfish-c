@@ -69,7 +69,7 @@ int negamax(Position pos, int depth) {
 }
 
 
-int negamax_ab(Position pos, int depth, int alpha, int beta) {
+static int negamax_ab_int(Position pos, int depth, int alpha, int beta, int allow_null) {
     int score;
     int original_alpha = alpha;
     search_nodes++;
@@ -94,6 +94,31 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
         }
     }
     
+    if (allow_null && depth >= 3 && !is_in_check(&pos)) {
+        // avoid applying for king and pawn endgames, as they are often tactical and require precise calculation
+        // if it has N B R or Q then its not a king and pawn endgame, so we can apply null move pruning
+        int piece_count = 0;
+        for (int square = 0; square < BOARD_SIZE; square++) {
+            char piece = pos.board[square];
+            if (strchr("NBRQ", piece) != NULL) {
+                piece_count++;
+            }
+        }
+        if (piece_count > 0) {
+            
+            Position null_pos = make_null_move(pos);
+            int null_score = -negamax_ab_int(null_pos, depth - 3, -beta, -beta + 1, 0); // null move search with reduced depth and no further null moves
+            // If the null move score is greater than or equal to beta, we can prune this branch.
+            if (null_score >= beta) {
+                return beta; // Fail-hard beta cutoff
+            }
+        }
+    }
+
+    // en passant captures and promotions are considered tactical, so we don't apply LMR for them
+    int lmr = search_options.enable_lmr &&
+          depth >= 3 &&
+          !is_in_check(&pos);
 
     Move moves[256];
     int count = gen_legal_moves(&pos, moves);
@@ -106,20 +131,36 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
 
     for (int i = 0; i < count; i++) {
         Position next = make_move(pos, moves[i]);
+        int new_depth = depth - 1;
+
+        // Apply late move reduction for non-captures and non-promotions and enpassant moves, if LMR is enabled and we are not in check.
+        if (lmr && i >= 4 && !islower((unsigned char)pos.board[moves[i].j]) && moves[i].prom == '\0') {
+            new_depth -= 1; // Reduce depth by 1 for late moves
+        }
 
         // Reverse the search bounds for the opponent.
-        score = -negamax_ab(next, depth - 1, -beta, -alpha);
-        
+        score = -negamax_ab_int(next, new_depth, -beta, -alpha, search_options.enable_null_move);
+
+        if (score > alpha) {
+            if (lmr){
+                score = -negamax_ab_int(next, depth - 1, -beta, -alpha, search_options.enable_null_move);
+                if (score > best) {
+                    best = score;
+                    bestidx = i;
+                }
+                if (score > alpha) {
+                    alpha = score;
+                }
+            }else{
+                alpha = score;
+            }
+        }
         if (score > best) {
             best = score;
             bestidx = i;
         }
 
-        if (score > alpha) {
-            alpha = score;
-        }
-
-        if (alpha >= beta) {
+        if (pruning_enabled && alpha >= beta) {
             break;
         }
     }
@@ -142,6 +183,9 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
     return best;
 }
 
+int negamax_ab(Position pos, int depth, int alpha, int beta) {
+    return negamax_ab_int(pos, depth, alpha, beta, search_options.enable_null_move);
+}
 
 void order_moves(const Position *pos, Move moves[], int count) {
     // Sort moves by immediate evaluation gain, highest first.

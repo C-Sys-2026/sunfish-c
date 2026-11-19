@@ -34,6 +34,7 @@ void test_en_passant(void);
 void test_position_pawn_move(void);
 void test_move_score(void);
 void test_double_pawn_push(void);
+void test_null_move(void);
 void test_san_pawn_move(void);
 void test_knight_move(void);
 void test_pawn_capture(void);
@@ -67,6 +68,8 @@ void test_best_move_checkmate(void);
 void test_best_move_stalemate(void);
 void test_search_options_default(void);
 void test_search_set_get_options(void);
+void test_null_switch(void);
+void test_lmr_switch(void);
 void test_uci_startpos_and_move_sequence(void);
 void test_uci_fen_rejects_bad_position_without_changing_state(void);
 void test_search_returns_a_legal_startpos_move(void);
@@ -122,6 +125,7 @@ WRAP(test_en_passant)
 WRAP(test_position_pawn_move)
 WRAP(test_move_score)
 WRAP(test_double_pawn_push)
+WRAP(test_null_move)
 WRAP(test_san_pawn_move)
 WRAP(test_knight_move)
 WRAP(test_pawn_capture)
@@ -155,6 +159,8 @@ WRAP(test_best_move_checkmate)
 WRAP(test_best_move_stalemate)
 WRAP(test_search_options_default)
 WRAP(test_search_set_get_options)
+WRAP(test_null_switch)
+WRAP(test_lmr_switch)
 WRAP(test_uci_startpos_and_move_sequence)
 WRAP(test_uci_fen_rejects_bad_position_without_changing_state)
 WRAP(test_search_returns_a_legal_startpos_move)
@@ -208,6 +214,7 @@ static MunitTest tests[] = {
     CASE("/position/position_pawn_move", test_position_pawn_move),
     CASE("/position/move_score", test_move_score),
     CASE("/position/double_pawn_push", test_double_pawn_push),
+    CASE("/position/null_move", test_null_move),
     CASE("/san/san_pawn_move", test_san_pawn_move),
     CASE("/san/knight_move", test_knight_move),
     CASE("/san/pawn_capture", test_pawn_capture),
@@ -241,6 +248,8 @@ static MunitTest tests[] = {
     CASE("/search/best_move_stalemate", test_best_move_stalemate),
     CASE("/search/search_options_default", test_search_options_default),
     CASE("/search/search_set_get_options", test_search_set_get_options),
+    CASE("/search/null_switch", test_null_switch),
+    CASE("/search/lmr_switch", test_lmr_switch),
     CASE("/search_checks/uci_startpos_and_move_sequence", test_uci_startpos_and_move_sequence),
     CASE("/search_checks/uci_fen_rejects_bad_position_without_changing_state", test_uci_fen_rejects_bad_position_without_changing_state),
     CASE("/search_checks/search_returns_a_legal_startpos_move", test_search_returns_a_legal_startpos_move),
