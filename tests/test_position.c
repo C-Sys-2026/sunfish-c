@@ -135,10 +135,10 @@ void test_null_move(void) {
     assert(null_move.kp == 0);
 
     // The rook and king castling rights should remain unchanged.
-    assert(null_move.wc[0] == next.bc[0]); //becuase of rotation, white castling rights become black castling rights
-    assert(null_move.wc[1] == next.bc[1]);
-    assert(null_move.bc[0] == next.wc[0]);
-    assert(null_move.bc[1] == next.wc[1]);
+    assert(null_move.wc[0] == next.bc[1]);
+    assert(null_move.wc[1] == next.bc[0]);
+    assert(null_move.bc[0] == next.wc[1]);
+    assert(null_move.bc[1] == next.wc[0]);
 
     //evaluation score changes perspectively correctly
     assert(null_move.score == -next.score);

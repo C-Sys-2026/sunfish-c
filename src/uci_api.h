@@ -3,6 +3,8 @@
 
 #include "position.h"
 
+#include <stdio.h>
+
 #define UCI_MAX_PV 64
 
 typedef struct {
@@ -39,6 +41,8 @@ struct SearchResult {
 
 /* Runs the UCI input loop until EOF or quit; owns command-line state. */
 int uci_main(void);
+/* Runs the same command loop on a caller-owned stream. */
+int uci_run(FILE *input);
 /* Initializes caller-owned state to the standard chess starting position. */
 void uci_position_start(UciPosition *position);
 /* Parses argv into temporary state and commits only on complete success. */

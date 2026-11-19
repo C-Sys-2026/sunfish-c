@@ -2,6 +2,7 @@
 
 #include "eval.h"
 #include "hash.h"
+#include "pgn.h"
 #include "tt.h"
 
 #include <ctype.h>
@@ -25,11 +26,13 @@ typedef enum {
     UCI_COMMAND_POSITION,
     UCI_COMMAND_GO,
     UCI_COMMAND_STOP,
+    UCI_COMMAND_GAMEOVER,
     UCI_COMMAND_QUIT
 } UciCommand;
 
 
 static UciPosition current_position;
+static PgnGame current_game;
 
 // function for an error
 static void report_error(const char *message)
@@ -74,6 +77,7 @@ static UciCommand command_from_token(const char *token)
     if (strcmp(token, "position") == 0) return UCI_COMMAND_POSITION;
     if (strcmp(token, "go") == 0) return UCI_COMMAND_GO;
     if (strcmp(token, "stop") == 0) return UCI_COMMAND_STOP;
+    if (strcmp(token, "gameover") == 0) return UCI_COMMAND_GAMEOVER;
     if (strcmp(token, "quit") == 0) return UCI_COMMAND_QUIT;
     return UCI_COMMAND_INVALID;
 }
@@ -112,6 +116,7 @@ static int handle_newgame(const UciTokens *tokens)
     go_handler_stop();
     go_handler_wait();
     uci_position_start(&current_position);
+    pgn_game_clear(&current_game);
     tt_clear();
     return 1;
 }
@@ -119,6 +124,11 @@ static int handle_newgame(const UciTokens *tokens)
 static int handle_position(const UciTokens *tokens)
 {
     UciPosition next_position;
+    UciPosition root_position;
+    int root_token_count;
+    int move_count;
+    char *const *move_tokens;
+    char terminal_result[8];
 
     if (!uci_position_parse(&next_position, tokens->count - 1,
                             &tokens->items[1])) {
@@ -126,9 +136,39 @@ static int handle_position(const UciTokens *tokens)
         return 1;
     }
 
+    if (strcmp(tokens->items[1], "startpos") == 0) {
+        root_token_count = 1;
+    } else {
+        root_token_count = 7;
+    }
+    if (tokens->count - 1 < root_token_count
+        || !uci_position_parse(&root_position, root_token_count,
+                               &tokens->items[1])) {
+        report_error("could not reconstruct accepted position root");
+        return 1;
+    }
+    if (tokens->count > root_token_count + 1
+        && strcmp(tokens->items[root_token_count + 1], "moves") == 0) {
+        move_count = tokens->count - root_token_count - 2;
+        move_tokens = move_count > 0
+            ? &tokens->items[root_token_count + 2] : NULL;
+    } else {
+        move_count = 0;
+        move_tokens = NULL;
+    }
+    if (!pgn_game_set_position(&current_game, &root_position, move_count,
+                               move_tokens)) {
+        report_error("could not record accepted position history");
+        return 1;
+    }
+
     go_handler_stop();
     go_handler_wait();
     current_position = next_position;
+    if (pgn_game_terminal_result(&current_game, terminal_result)
+        && !pgn_game_export(&current_game, terminal_result)) {
+        report_error("could not export completed PGN game");
+    }
     return 1;
 }
 
@@ -148,6 +188,23 @@ static int handle_stop(const UciTokens *tokens)
         return 1;
     }
     go_handler_stop();
+    return 1;
+}
+
+static int handle_gameover(const UciTokens *tokens)
+{
+    if (tokens->count != 2
+        || (strcmp(tokens->items[1], "1-0") != 0
+            && strcmp(tokens->items[1], "0-1") != 0
+            && strcmp(tokens->items[1], "1/2-1/2") != 0)) {
+        report_error("'gameover' requires 1-0, 0-1, or 1/2-1/2");
+        return 1;
+    }
+    go_handler_stop();
+    go_handler_wait();
+    if (!pgn_game_export(&current_game, tokens->items[1])) {
+        report_error("no active game or PGN export failed");
+    }
     return 1;
 }
 
@@ -177,6 +234,8 @@ static int dispatch_command(const UciTokens *tokens)
         return handle_go(tokens);
     case UCI_COMMAND_STOP:
         return handle_stop(tokens);
+    case UCI_COMMAND_GAMEOVER:
+        return handle_gameover(tokens);
     case UCI_COMMAND_QUIT:
         return handle_quit(tokens);
     case UCI_COMMAND_INVALID:
@@ -186,22 +245,27 @@ static int dispatch_command(const UciTokens *tokens)
     }
 }
 
-int uci_main(void)
+int uci_run(FILE *input)
 {
     char line[UCI_LINE_SIZE];
 
+    if (input == NULL) {
+        return 1;
+    }
     pad_tables();
     init_king_tables();
     init_zobrist();
+    tt_clear();
     uci_position_start(&current_position);
+    pgn_game_clear(&current_game);
 
-    while (fgets(line, sizeof(line), stdin) != NULL) {
+    while (fgets(line, sizeof(line), input) != NULL) {
         size_t length = strlen(line);
         UciTokens tokens;
 
-        if (length > 0 && line[length - 1] != '\n' && !feof(stdin)) {
+        if (length > 0 && line[length - 1] != '\n' && !feof(input)) {
             int character;
-            while ((character = getchar()) != '\n' && character != EOF) {
+            while ((character = fgetc(input)) != '\n' && character != EOF) {
             }
             report_error("command line is too long");
             continue;
@@ -220,5 +284,11 @@ int uci_main(void)
 
     go_handler_stop();
     go_handler_wait();
-    return ferror(stdin) ? 1 : 0;
+    search_reset_stop();
+    return ferror(input) ? 1 : 0;
+}
+
+int uci_main(void)
+{
+    return uci_run(stdin);
 }

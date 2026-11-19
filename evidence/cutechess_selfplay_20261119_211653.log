@@ -1,0 +1,17 @@
+Started game 1 of 2 (Sunfish-C A vs Sunfish-C B)
+Finished game 1 (Sunfish-C A vs Sunfish-C B): 1/2-1/2 {Draw by adjudication: maximal game length}
+Score of Sunfish-C A vs Sunfish-C B: 0 - 0 - 1  [0.500] 1
+Started game 2 of 2 (Sunfish-C B vs Sunfish-C A)
+Finished game 2 (Sunfish-C B vs Sunfish-C A): 1/2-1/2 {Draw by adjudication: maximal game length}
+Score of Sunfish-C A vs Sunfish-C B: 0 - 0 - 2  [0.500] 2
+...      Sunfish-C A playing White: 0 - 0 - 1  [0.500] 1
+...      Sunfish-C A playing Black: 0 - 0 - 1  [0.500] 1
+...      White vs Black: 0 - 0 - 2  [0.500] 2
+Elo difference: 0.0 +/- 0.0, LOS: nan %, DrawRatio: 100.0 %
+SPRT: llr 0 (0.0%), lbound -inf, ubound inf
+
+Player: Sunfish-C A
+   "Draw by adjudication: maximal game length": 2
+Player: Sunfish-C B
+   "Draw by adjudication: maximal game length": 2
+Finished match

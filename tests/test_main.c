@@ -28,6 +28,13 @@ void test_checkmate(void);
 void test_stalemate(void);
 void test_empty_board(void);
 void test_center_knight(void);
+void test_pgn_history_export_and_duplicate_prevention(void);
+void test_pgn_san_disambiguation_and_special_moves(void);
+void test_pgn_terminal_checkmate_and_stalemate_results(void);
+void test_pgn_fen_root_and_black_move_number(void);
+void test_pgn_incomplete_position_and_reset_do_not_export(void);
+void test_uci_go_stop_quit_leave_game_incomplete(void);
+void test_uci_gameover_and_terminal_position_export(void);
 void test_promotion(void);
 void test_position_castling(void);
 void test_en_passant(void);
@@ -121,6 +128,13 @@ WRAP(test_checkmate)
 WRAP(test_stalemate)
 WRAP(test_empty_board)
 WRAP(test_center_knight)
+WRAP(test_pgn_history_export_and_duplicate_prevention)
+WRAP(test_pgn_san_disambiguation_and_special_moves)
+WRAP(test_pgn_terminal_checkmate_and_stalemate_results)
+WRAP(test_pgn_fen_root_and_black_move_number)
+WRAP(test_pgn_incomplete_position_and_reset_do_not_export)
+WRAP(test_uci_go_stop_quit_leave_game_incomplete)
+WRAP(test_uci_gameover_and_terminal_position_export)
 WRAP(test_promotion)
 WRAP(test_position_castling)
 WRAP(test_en_passant)
@@ -212,6 +226,13 @@ static MunitTest tests[] = {
     CASE("/legality/stalemate", test_stalemate),
     CASE("/movegen/empty_board", test_empty_board),
     CASE("/movegen/center_knight", test_center_knight),
+    CASE("/pgn/pgn_history_export_and_duplicate_prevention", test_pgn_history_export_and_duplicate_prevention),
+    CASE("/pgn/pgn_san_disambiguation_and_special_moves", test_pgn_san_disambiguation_and_special_moves),
+    CASE("/pgn/pgn_terminal_checkmate_and_stalemate_results", test_pgn_terminal_checkmate_and_stalemate_results),
+    CASE("/pgn/pgn_fen_root_and_black_move_number", test_pgn_fen_root_and_black_move_number),
+    CASE("/pgn/pgn_incomplete_position_and_reset_do_not_export", test_pgn_incomplete_position_and_reset_do_not_export),
+    CASE("/pgn/uci_go_stop_quit_leave_game_incomplete", test_uci_go_stop_quit_leave_game_incomplete),
+    CASE("/pgn/uci_gameover_and_terminal_position_export", test_uci_gameover_and_terminal_position_export),
     CASE("/position/promotion", test_promotion),
     CASE("/position/position_castling", test_position_castling),
     CASE("/position/en_passant", test_en_passant),

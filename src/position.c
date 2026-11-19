@@ -25,12 +25,12 @@ Position rotate(Position pos, int nullmove) {
     // Reverse the evaluation perspective
     rotated.score = -pos.score;
 
-    // Swap castling rights
-    rotated.wc[0] = pos.bc[0];
-    rotated.wc[1] = pos.bc[1];
+    // The 180-degree board rotation also swaps king- and queenside.
+    rotated.wc[0] = pos.bc[1];
+    rotated.wc[1] = pos.bc[0];
 
-    rotated.bc[0] = pos.wc[0];
-    rotated.bc[1] = pos.wc[1];
+    rotated.bc[0] = pos.wc[1];
+    rotated.bc[1] = pos.wc[0];
 
     // Update special squares
     rotated.ep = (pos.ep && !nullmove) ? 119 - pos.ep : 0;

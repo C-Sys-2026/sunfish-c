@@ -40,13 +40,20 @@ make bench
 ```
 The executable is written to `build/sunfish-c`.
 
+## PGN export
+
+The UCI loop records the complete move list from each accepted `position`
+command. Checkmate and stalemate are exported automatically when supplied as
+the final position; external resignations and agreed draws are not part of UCI,
+so send the explicit extension `gameover 1-0`, `gameover 0-1`, or
+`gameover 1/2-1/2` to finish and export those games. PGNs are written as
+timestamp-based `.txt` files in `games/`. `go`, `stop`, EOF, and `quit` do not
+finish or export a game, and `ucinewgame` clears the current history.
+
 Remove generated output with:
 
 ```sh
 make clean
 ```
 
-The current M0 skeleton only verifies the project layout and build setup.
-Chess representation, move generation, evaluation, search, and UCI support
-will be added in later milestones.
 "# sunfish-c" 
