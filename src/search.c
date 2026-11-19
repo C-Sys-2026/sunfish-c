@@ -73,6 +73,8 @@ static int negamax_ab_int(Position pos, int depth, int alpha, int beta, int allo
     int score;
     int original_alpha = alpha;
     search_nodes++;
+
+    
     
     if (is_checkmate(&pos)) {
         return -MATE_UPPER; // prefer faster checkmates
@@ -130,36 +132,78 @@ static int negamax_ab_int(Position pos, int depth, int alpha, int beta, int allo
     int bestidx = -1;
 
     for (int i = 0; i < count; i++) {
-        Position next = make_move(pos, moves[i]);
-        int new_depth = depth - 1;
+        Move move = moves[i];
+        Position next = make_move(pos, move);
 
-        // Apply late move reduction for non-captures and non-promotions and enpassant moves, if LMR is enabled and we are not in check.
-        if (lmr && i >= 4 && !islower((unsigned char)pos.board[moves[i].j]) && moves[i].prom == '\0') {
-            new_depth -= 1; // Reduce depth by 1 for late moves
+        int full_depth = depth - 1;
+        int new_depth = full_depth;
+
+        // Detect captures, including en passant.
+        int is_capture =
+            islower((unsigned char)pos.board[move.j]) ||
+            (pos.board[move.i] == 'P' &&
+            pos.ep != 0 &&
+            move.j == pos.ep);
+
+        int is_promotion = move.prom != '\0';
+
+        // Only reduce late, quiet moves.
+        int reduced =
+            lmr &&
+            i >= 4 &&
+            !is_capture &&
+            !is_promotion;
+
+        if (reduced) {
+            new_depth--;
         }
 
-        // Reverse the search bounds for the opponent.
-        score = -negamax_ab_int(next, new_depth, -beta, -alpha, search_options.enable_null_move);
-
-        if (score > alpha) {
-            if (lmr){
-                score = -negamax_ab_int(next, depth - 1, -beta, -alpha, search_options.enable_null_move);
-                if (score > best) {
-                    best = score;
-                    bestidx = i;
-                }
-                if (score > alpha) {
-                    alpha = score;
-                }
-            }else{
-                alpha = score;
-            }
+        //futility pruning: if the score is less than alpha and we are not in check, we can skip further search
+        if (search_options.enable_futility &&
+            depth == 1 &&
+            bestidx >= 0 &&
+            !is_in_check(&pos) &&
+            !is_capture &&
+            !is_promotion &&
+            !is_in_check(&next) &&
+            pos.score + 200 <= alpha) {
+            continue;
         }
+
+        // Initial search.
+        score = -negamax_ab_int(
+            next,
+            new_depth,
+            -beta,
+            -alpha,
+            search_options.enable_null_move
+        );
+
+        
+
+        // Verify promising reduced moves at full depth.
+        if (reduced && score > alpha) {
+            score = -negamax_ab_int(
+                next,
+                full_depth,
+                -beta,
+                -alpha,
+                search_options.enable_null_move
+            );
+        }
+
+        // Update best using the final score.
         if (score > best) {
             best = score;
             bestidx = i;
         }
 
+        // Update alpha for ALL moves, whether reduced or not.
+        if (score > alpha) {
+            alpha = score;
+        }
+
+        // Ordinary alpha-beta cutoff.
         if (pruning_enabled && alpha >= beta) {
             break;
         }

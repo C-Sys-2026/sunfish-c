@@ -414,3 +414,87 @@ void test_lmr_switch(void){
     assert(score_with_lmr == score_without_lmr);
     printf("PASS: Late move reduction does not change the score\n");
 }
+
+void test_futility_switch(void) {
+    Position pos = {0};
+    strcpy(pos.board, initial);
+
+    search_set_features(0, 1);  // Disable TT, enable alpha-beta pruning
+
+    SearchOptions options = search_options_default();
+
+    int alpha = pos.score + 250;
+    int beta = pos.score + 500;
+
+    // Futility pruning ON
+    options.enable_futility = 1;
+    search_set_options(options);
+
+    search_reset_node_count();
+    int score_with_futility = negamax_ab(pos, 1, alpha, beta);
+    unsigned long long nodes_with_futility = search_get_node_count();
+
+    // Futility pruning OFF
+    options.enable_futility = 0;
+    search_set_options(options);
+
+    search_reset_node_count();
+    int score_without_futility = negamax_ab(pos, 1, alpha, beta);
+    unsigned long long nodes_without_futility = search_get_node_count();
+
+    printf("Futility ON:  score = %d, nodes = %llu\n",
+           score_with_futility, nodes_with_futility);
+
+    printf("Futility OFF: score = %d, nodes = %llu\n",
+           score_without_futility, nodes_without_futility);
+
+    // Futility pruning should not increase the number of searched nodes.
+    assert(nodes_with_futility <= nodes_without_futility);
+
+    // This test position/window should exercise futility pruning.
+    assert(nodes_with_futility < nodes_without_futility);
+
+    // Restore defaults.
+    search_set_options(search_options_default());
+    search_set_features(1, 1);
+
+    printf("PASS: Futility pruning reduces searched nodes\n");
+}
+
+void test_all_pruning_enabled(void) {
+    Position pos = {0};
+    strcpy(pos.board, initial);
+
+    // Disable TT, keep alpha-beta pruning enabled.
+    search_set_features(0, 1);
+
+    // Enable all three selective-pruning features.
+    SearchOptions options = {1, 1, 1};
+    search_set_options(options);
+
+    // Search from the initial position.
+    Move best = find_best_move(pos, 4);
+
+    // Generate legal moves to verify the result.
+    Move legal_moves[256];
+    int count = gen_legal_moves(&pos, legal_moves);
+
+    int found = 0;
+
+    for (int i = 0; i < count; i++) {
+        if (best.i == legal_moves[i].i &&
+            best.j == legal_moves[i].j &&
+            best.prom == legal_moves[i].prom) {
+            found = 1;
+            break;
+        }
+    }
+
+    assert(found);
+
+    // Restore default settings.
+    search_set_options(search_options_default());
+    search_set_features(1, 1);
+
+    printf("PASS: All pruning features work together\n");
+}
