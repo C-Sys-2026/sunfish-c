@@ -71,6 +71,7 @@ void test_search_set_get_options(void);
 void test_null_switch(void);
 void test_lmr_switch(void);
 void test_futility_switch(void);
+void test_all_pruning_enabled(void);
 void test_uci_startpos_and_move_sequence(void);
 void test_uci_fen_rejects_bad_position_without_changing_state(void);
 void test_search_returns_a_legal_startpos_move(void);
@@ -163,6 +164,7 @@ WRAP(test_search_set_get_options)
 WRAP(test_null_switch)
 WRAP(test_lmr_switch)
 WRAP(test_futility_switch)
+WRAP(test_all_pruning_enabled)
 WRAP(test_uci_startpos_and_move_sequence)
 WRAP(test_uci_fen_rejects_bad_position_without_changing_state)
 WRAP(test_search_returns_a_legal_startpos_move)
@@ -253,6 +255,7 @@ static MunitTest tests[] = {
     CASE("/search/null_switch", test_null_switch),
     CASE("/search/lmr_switch", test_lmr_switch),
     CASE("/search/futility_switch", test_futility_switch),
+    CASE("/search/all_pruning_enabled", test_all_pruning_enabled),
     CASE("/search_checks/uci_startpos_and_move_sequence", test_uci_startpos_and_move_sequence),
     CASE("/search_checks/uci_fen_rejects_bad_position_without_changing_state", test_uci_fen_rejects_bad_position_without_changing_state),
     CASE("/search_checks/search_returns_a_legal_startpos_move", test_search_returns_a_legal_startpos_move),

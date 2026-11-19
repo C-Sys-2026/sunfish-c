@@ -1,3 +1,12 @@
+#ifndef _WIN32
+#define _POSIX_C_SOURCE 200809L
+#else
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+#include <windows.h>
+#endif
+
 #include "uci_api.h"
 
 #include "board.h"
@@ -16,6 +25,22 @@
 #include <time.h>
 
 static volatile int stop_requested;
+static unsigned long long search_started_ms;
+static int search_time_budget_ms = -1;
+
+static unsigned long long monotonic_time_ms(void)
+{
+#ifdef _WIN32
+    return (unsigned long long)GetTickCount64();
+#else
+    struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) {
+        return 0;
+    }
+    return (unsigned long long)now.tv_sec * 1000ULL
+        + (unsigned long long)now.tv_nsec / 1000000ULL;
+#endif
+}
 
 static int square_from_coordinate(const char *text)
 
@@ -232,9 +257,64 @@ int uci_position_parse(UciPosition *position, int argc, char *const argv[])
     return 1;
 }
 
-void search_reset_stop(void) { stop_requested = 0; }
+void search_reset_stop(void)
+{
+    stop_requested = 0;
+    search_time_budget_ms = -1;
+}
+
 void search_request_stop(void) { stop_requested = 1; }
-int search_stop_requested(void) { return stop_requested != 0; }
+
+int search_stop_requested(void)
+{
+    unsigned long long now = monotonic_time_ms();
+    if (!stop_requested && search_time_budget_ms >= 0
+        && now >= search_started_ms
+        && now - search_started_ms >= (unsigned long long)search_time_budget_ms) {
+        stop_requested = 1;
+    }
+    return stop_requested != 0;
+}
+
+/* Search one complete root iteration. If a stop arrives mid-iteration, leave
+ * the caller's last fully completed result untouched. */
+static int search_root_iteration(const Position *position, int depth,
+                                 Move *best_move, int *best_score)
+{
+    Move moves[256];
+    int count = gen_legal_moves(position, moves);
+    int alpha = -1000000;
+    const int beta = 1000000;
+    int best = -1000000;
+    Move selected = {-1, -1, '\0'};
+
+    if (count == 0) {
+        return 0;
+    }
+    order_moves(position, moves, count);
+    for (int index = 0; index < count; index++) {
+        Position next;
+        int score;
+        if (search_stop_requested()) {
+            return 0;
+        }
+        next = make_move(*position, moves[index]);
+        score = -negamax_ab(next, depth - 1, -beta, -alpha);
+        if (search_stop_requested()) {
+            return 0;
+        }
+        if (score > best) {
+            best = score;
+            selected = moves[index];
+        }
+        if (score > alpha) {
+            alpha = score;
+        }
+    }
+    *best_move = selected;
+    *best_score = best;
+    return 1;
+}
 
 SearchResult search_position(const Position *position, const SearchLimits *limits)
 {
@@ -242,32 +322,46 @@ SearchResult search_position(const Position *position, const SearchLimits *limit
     Move moves[256];
     int count;
     int max_depth;
-    clock_t started = clock();
+    unsigned long long started_ms = monotonic_time_ms();
 
     if (position == NULL || limits == NULL) return result;
+    search_started_ms = started_ms;
+    search_time_budget_ms = limits->time_budget_ms;
     count = gen_legal_moves(position, moves);
-    if (count == 0) return result;
+    if (count == 0) {
+        search_time_budget_ms = -1;
+        return result;
+    }
     result.best_move = moves[0];
     result.has_best_move = 1;
     search_reset_node_count();
     max_depth = limits->depth > 0 ? limits->depth : 1;
-    if (max_depth > 8) max_depth = 8;
-    for (int depth = 1; depth <= max_depth && !stop_requested; depth++) {
-        Move best = find_best_move(*position, depth);
-        if (best.i >= 0) result.best_move = best;
+    if (max_depth > UCI_MAX_PV) max_depth = UCI_MAX_PV;
+    for (int depth = 1; depth <= max_depth && !search_stop_requested(); depth++) {
+        Move best;
+        int score;
+        if (!search_root_iteration(position, depth, &best, &score)) {
+            break;
+        }
+        result.best_move = best;
+        result.score = score;
         result.depth = depth;
-        result.score = iterative_deepening(*position, depth);
         result.nodes = search_get_node_count();
         result.hashfull = tt_hashfull();
+        {
+            unsigned long long elapsed_ms = monotonic_time_ms() - started_ms;
+            result.nps = result.nodes * 1000ULL / (elapsed_ms == 0 ? 1 : elapsed_ms);
+        }
+        result.pv[0] = result.best_move;
+        result.pv_length = 1;
         if (limits->info_callback != NULL) limits->info_callback(&result, limits->info_context);
-        if (limits->time_budget_ms >= 0
-            && (clock() - started) * 1000 / CLOCKS_PER_SEC >= limits->time_budget_ms) break;
     }
-    result.pv[0] = result.best_move;
-    result.pv_length = 1;
     result.nodes = search_get_node_count();
     result.hashfull = tt_hashfull();
-    result.nps = result.nodes * CLOCKS_PER_SEC
-        / (unsigned long long)(clock() - started + 1);
+    {
+        unsigned long long elapsed_ms = monotonic_time_ms() - started_ms;
+        result.nps = result.nodes * 1000ULL / (elapsed_ms == 0 ? 1 : elapsed_ms);
+    }
+    search_time_budget_ms = -1;
     return result;
 }

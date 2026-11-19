@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "search.h"
 #include "movegen.h"
 #include "legality.h"
@@ -73,9 +74,9 @@ static int negamax_ab_int(Position pos, int depth, int alpha, int beta, int allo
     int score;
     int original_alpha = alpha;
     search_nodes++;
-
-    
-    
+    if (search_stop_requested()) {
+        return alpha;
+    }
     if (is_checkmate(&pos)) {
         return -MATE_UPPER; // prefer faster checkmates
     }
@@ -132,6 +133,9 @@ static int negamax_ab_int(Position pos, int depth, int alpha, int beta, int allo
     int bestidx = -1;
 
     for (int i = 0; i < count; i++) {
+        if (search_stop_requested()) {
+            break;
+        }
         Move move = moves[i];
         Position next = make_move(pos, move);
 
@@ -257,6 +261,10 @@ int quiescence_search(Position pos, int alpha, int beta, int depth){
     int in_check = 0;
     int has_king = 0;
 
+    if (search_stop_requested()) {
+        return alpha;
+    }
+
     // The current evaluation is our starting point.
 
     if (is_checkmate(&pos)) {
@@ -296,6 +304,9 @@ int quiescence_search(Position pos, int alpha, int beta, int depth){
     order_moves(&pos, moves, count);
 
     for (int i = 0; i < count; i++) {
+        if (search_stop_requested()) {
+            break;
+        }
         Move move = moves[i];
         Position next = make_move(pos, move);
 
@@ -352,6 +363,9 @@ Move find_best_move(Position pos, int depth){
         return best_move;
     }
     for (int i = 0; i < count; i++) {
+        if (search_stop_requested()) {
+            break;
+        }
         Position next = make_move(pos, moves[i]);
         int score = -negamax_ab(next, depth - 1, -1000000, 1000000);
         if (score > best_score) {

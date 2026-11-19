@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define UCI_LINE_SIZE 4096
-#define UCI_MAX_TOKENS 128
+#define UCI_MAX_TOKENS 1024
 
 typedef struct {
     char *items[UCI_MAX_TOKENS];
