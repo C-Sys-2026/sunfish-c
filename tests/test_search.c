@@ -351,6 +351,41 @@ void test_best_move_stalemate(void){
     }
 }
 
+void test_search_options_default(void){
+    SearchOptions options = search_options_default();
+    assert(options.enable_null_move == 0);
+    assert(options.enable_lmr == 0);
+    assert(options.enable_futility == 0);
+    printf("PASS: search_options_default returns default options\n");
+}
+
+void test_search_set_get_options(void){
+    SearchOptions options = {0,0,0};
+    search_set_options(options);
+    //enable only null move
+    options.enable_null_move = 1;
+    search_set_options(options);
+    SearchOptions retrieved = search_get_options();
+    assert(retrieved.enable_null_move == 1);
+    assert(retrieved.enable_lmr == 0);
+    assert(retrieved.enable_futility == 0);
+    //repeat for lmr and futility
+    options.enable_null_move = 0;
+    options.enable_lmr = 1;
+    search_set_options(options);
+    retrieved = search_get_options();
+    assert(retrieved.enable_null_move == 0);
+    assert(retrieved.enable_lmr == 1);
+    assert(retrieved.enable_futility == 0);
+    options.enable_lmr = 0;
+    options.enable_futility = 1;
+    search_set_options(options);
+    retrieved = search_get_options();
+    assert(retrieved.enable_null_move == 0);
+    assert(retrieved.enable_lmr == 0);
+    assert(retrieved.enable_futility == 1);
+    printf("PASS: search_set_options and search_get_options work correctly\n");
+}
 #if 0
 int main(void) {
     pad_tables();

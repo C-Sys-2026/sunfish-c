@@ -14,10 +14,20 @@ static int tt_enabled = 1;
 static int pruning_enabled = 1;
 static unsigned long long search_nodes;
 
+static SearchOptions search_options = {0, 0, 0};
+
 void search_set_features(int tt, int pruning)
 {
     tt_enabled = tt;
     pruning_enabled = pruning;
+}
+
+void search_set_options(SearchOptions options){
+    search_options = options;
+}
+
+SearchOptions search_get_options(void){
+    return search_options;
 }
 
 void search_reset_node_count(void) { search_nodes = 0; }
@@ -109,7 +119,7 @@ int negamax_ab(Position pos, int depth, int alpha, int beta) {
             alpha = score;
         }
 
-        if (pruning_enabled && alpha >= beta) {
+        if (alpha >= beta) {
             break;
         }
     }
@@ -262,4 +272,8 @@ Move find_best_move(Position pos, int depth){
         }
     }
     return best_move;
+}
+
+SearchOptions search_options_default(void){
+    return (SearchOptions){0, 0, 0};
 }

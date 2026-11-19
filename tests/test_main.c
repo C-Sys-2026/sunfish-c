@@ -65,6 +65,8 @@ void test_iterative_deepening_zero_depth(void);
 void test_best_move(void);
 void test_best_move_checkmate(void);
 void test_best_move_stalemate(void);
+void test_search_options_default(void);
+void test_search_set_get_options(void);
 void test_uci_startpos_and_move_sequence(void);
 void test_uci_fen_rejects_bad_position_without_changing_state(void);
 void test_search_returns_a_legal_startpos_move(void);
@@ -151,6 +153,8 @@ WRAP(test_iterative_deepening_zero_depth)
 WRAP(test_best_move)
 WRAP(test_best_move_checkmate)
 WRAP(test_best_move_stalemate)
+WRAP(test_search_options_default)
+WRAP(test_search_set_get_options)
 WRAP(test_uci_startpos_and_move_sequence)
 WRAP(test_uci_fen_rejects_bad_position_without_changing_state)
 WRAP(test_search_returns_a_legal_startpos_move)
@@ -235,6 +239,8 @@ static MunitTest tests[] = {
     CASE("/search/best_move", test_best_move),
     CASE("/search/best_move_checkmate", test_best_move_checkmate),
     CASE("/search/best_move_stalemate", test_best_move_stalemate),
+    CASE("/search/search_options_default", test_search_options_default),
+    CASE("/search/search_set_get_options", test_search_set_get_options),
     CASE("/search_checks/uci_startpos_and_move_sequence", test_uci_startpos_and_move_sequence),
     CASE("/search_checks/uci_fen_rejects_bad_position_without_changing_state", test_uci_fen_rejects_bad_position_without_changing_state),
     CASE("/search_checks/search_returns_a_legal_startpos_move", test_search_returns_a_legal_startpos_move),

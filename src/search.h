@@ -35,4 +35,14 @@ Move find_best_move(Position pos, int depth);
 void search_set_features(int tt_enabled, int pruning_enabled);
 void search_reset_node_count(void);
 unsigned long long search_get_node_count(void);
+
+typedef struct {
+    int enable_null_move;
+    int enable_lmr;
+    int enable_futility;
+} SearchOptions;
+
+SearchOptions search_options_default(void);
+SearchOptions search_get_options(void);
+void search_set_options(SearchOptions options);
 #endif
